@@ -152,6 +152,8 @@ A: Click the **⋮** menu on your Energy Tracker integration and select **Reconf
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+Copyright (c) 2015-2025 energy-tracker support@best-ios-apps.de
+
 ## Related Links
 
 - [Energy Tracker Website](https://www.energy-tracker.best-ios-apps.de)
