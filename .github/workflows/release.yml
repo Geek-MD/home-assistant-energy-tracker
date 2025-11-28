@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract tag name
+        id: tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          if [ -z "$PREV_TAG" ]; then
+            # First release - get all commits
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            # Get commits since previous tag
+            COMMITS=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          
+          # Save to file for multiline output
+          echo "$COMMITS" > changelog.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
+          name: Release ${{ steps.tag.outputs.TAG_NAME }}
+          body: |
+            ## Energy Tracker Integration ${{ steps.tag.outputs.TAG_NAME }}
+
+            This release includes the Energy Tracker integration for Home Assistant Core.
+
+            ### Changes in this Release
+
+            ${{ steps.changelog.outputs.COMMITS }}
+
+            ### Documentation
+
+            - [README](https://github.com/energy-tracker/home-assistant-energy-tracker/blob/main/README.md)
+            - [Energy Tracker Website](https://www.energy-tracker.best-ios-apps.de)
+
+            ---
+
+            **Note**: This release automatically triggers a sync to the [Home Assistant Core fork](https://github.com/energy-tracker/core) for PR submission.
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+
+  notify:
+    name: Notify Sync Status
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract tag name
+        id: tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Post status comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = '${{ steps.tag.outputs.TAG_NAME }}';
+            const message = `✅ Release ${tag} created successfully!\n\n` +
+              `The sync workflow is now running to create a branch in the Home Assistant Core fork.\n\n` +
+              `Branch: \`energy-tracker-${tag}\`\n` +
+              `Fork: https://github.com/energy-tracker/core`;
+            
+            console.log(message);

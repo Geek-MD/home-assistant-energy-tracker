@@ -1,0 +1,81 @@
+name: Sync to Home Assistant Core Fork
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync to Core Fork
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract tag name
+        id: tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Checkout core fork
+        uses: actions/checkout@v4
+        with:
+          repository: energy-tracker/core
+          token: ${{ secrets.CORE_SYNC_TOKEN }}
+          path: core-fork
+          fetch-depth: 0
+
+      - name: Configure git
+        working-directory: core-fork
+        run: |
+          git config user.name "Energy Tracker [bot]"
+          git config user.email "bot@energy-tracker.de"
+
+      - name: Create branch from dev
+        working-directory: core-fork
+        run: |
+          git fetch origin dev
+          git checkout -b energy-tracker-${{ steps.tag.outputs.TAG_NAME }} origin/dev
+
+      - name: Sync component files
+        run: |
+          # Remove old component files
+          rm -rf core-fork/homeassistant/components/energy_tracker
+          
+          # Copy component files
+          mkdir -p core-fork/homeassistant/components/energy_tracker
+          cp -r custom_components/energy_tracker/* core-fork/homeassistant/components/energy_tracker/
+
+      - name: Sync test files
+        run: |
+          # Remove old test files
+          rm -rf core-fork/tests/components/energy_tracker
+          
+          # Copy test files
+          mkdir -p core-fork/tests/components/energy_tracker
+          cp -r tests/* core-fork/tests/components/energy_tracker/
+
+      - name: Create commit
+        working-directory: core-fork
+        run: |
+          git add .
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          git commit -m "Add Energy Tracker integration ${{ steps.tag.outputs.TAG_NAME }}"
+
+      - name: Push branch
+        working-directory: core-fork
+        run: |
+          git push origin energy-tracker-${{ steps.tag.outputs.TAG_NAME }}
+          echo "✅ Branch energy-tracker-${{ steps.tag.outputs.TAG_NAME }} pushed to energy-tracker/core"
+          echo "You can now create a PR manually from this branch to home-assistant/core"

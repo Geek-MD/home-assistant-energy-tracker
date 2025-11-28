@@ -1,0 +1,33 @@
+# Home Assistant runtime
+.storage/
+home-assistant_v2.db*
+home-assistant.log*
+blueprints/
+deps/
+tts/
+.HA_VERSION
+.ha_run.lock
+.cloud/
+
+# User configuration
+automations.yaml
+configuration.yaml
+secrets.yaml
+known_devices.yaml
+scenes.yaml
+scripts.yaml
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# macOS / Editor
+.DS_Store
+.vscode/
