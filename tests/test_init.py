@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -21,6 +22,25 @@ from custom_components.energy_tracker.const import (
     DOMAIN,
     SERVICE_SEND_METER_READING,
 )
+
+
+def create_service_call(
+    hass: HomeAssistant,
+    domain: str,
+    service: str,
+    data: dict,
+) -> ServiceCall:
+    """Create ServiceCall compatible with different HA versions."""
+    # Check if ServiceCall accepts hass as first positional arg (newer versions)
+    sig = inspect.signature(ServiceCall.__init__)
+    params = list(sig.parameters.keys())
+
+    # If 'hass' is the second parameter (after 'self'), use positional
+    if len(params) > 1 and params[1] == "hass":
+        return ServiceCall(hass, domain, service, data=data)
+    else:
+        # Older version expects domain as first arg
+        return ServiceCall(domain=domain, service=service, data=data)
 
 
 class TestAsyncSetup:
@@ -191,11 +211,11 @@ class TestAsyncHandleSendMeterReading:
             {"unit_of_measurement": "kWh"},
         )
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -230,11 +250,11 @@ class TestAsyncHandleSendMeterReading:
         entry.add_to_hass(hass)
         await async_setup_entry(hass, entry)
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "   ",
                 "source_entity_id": "sensor.energy_meter",
@@ -261,11 +281,11 @@ class TestAsyncHandleSendMeterReading:
         entry.add_to_hass(hass)
         await async_setup_entry(hass, entry)
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.nonexistent",
@@ -297,11 +317,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", STATE_UNAVAILABLE)
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -335,11 +355,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", STATE_UNKNOWN)
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -369,11 +389,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", "not_a_number")
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -410,11 +430,11 @@ class TestAsyncHandleSendMeterReading:
         mock_state.state = "123.45"
         mock_state.last_updated = None
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -449,11 +469,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -473,11 +493,11 @@ class TestAsyncHandleSendMeterReading:
         # Arrange
         hass.states.async_set("sensor.energy_meter", "123.45")
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "nonexistent-entry-id",
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -506,11 +526,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "test-entry-id",
                 "device_id": "  device-123  ",
                 "source_entity_id": "sensor.energy_meter",
@@ -543,11 +563,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "",  # Empty entry_id
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
@@ -577,11 +597,11 @@ class TestAsyncHandleSendMeterReading:
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
-        call = ServiceCall(
+        call = create_service_call(
             hass,
-            domain=DOMAIN,
-            service=SERVICE_SEND_METER_READING,
-            data={
+            DOMAIN,
+            SERVICE_SEND_METER_READING,
+            {
                 "entry_id": "deleted-entry-id",  # Different entry that was deleted
                 "device_id": "device-123",
                 "source_entity_id": "sensor.energy_meter",
