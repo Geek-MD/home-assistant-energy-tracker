@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Eroare de rețea în timpul cererii. Verificați conexiunea la internet și încercați din nou."
     },
-    "connection_failed": {
-      "message": "Conectarea la server a eșuat. Încercați din nou."
-    },
     "bad_request": {
       "message": "Date de intrare nevalide. Verificați datele de intrare. ({error})"
     },

@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Netwerkfout tijdens verzoek. Controleer de internetverbinding en probeer opnieuw."
     },
-    "connection_failed": {
-      "message": "Verbinding met server mislukt. Probeer opnieuw."
-    },
     "bad_request": {
       "message": "Ongeldige invoer. Controleer de invoergegevens. ({error})"
     },

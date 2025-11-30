@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Kesalahan jaringan selama permintaan. Periksa koneksi internet dan coba lagi."
     },
-    "connection_failed": {
-      "message": "Koneksi ke server gagal. Coba lagi."
-    },
     "bad_request": {
       "message": "Input tidak valid. Periksa data input. ({error})"
     },

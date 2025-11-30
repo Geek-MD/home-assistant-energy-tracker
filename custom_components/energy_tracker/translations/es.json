@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Error de red durante la solicitud. Por favor, verifica la conexión a Internet e inténtalo de nuevo."
     },
-    "connection_failed": {
-      "message": "Fallo en la conexión con el servidor. Por favor, inténtalo de nuevo."
-    },
     "bad_request": {
       "message": "Entrada no válida. Por favor, verifica los datos de entrada. ({error})"
     },

@@ -46,9 +46,6 @@
     "network_error": {
       "message": "請求期間發生網路錯誤。請檢查網際網路連線並重試。"
     },
-    "connection_failed": {
-      "message": "連線伺服器失敗。請重試。"
-    },
     "bad_request": {
       "message": "輸入無效。請檢查輸入資料。({error})"
     },

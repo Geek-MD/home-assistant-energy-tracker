@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Nettverksfeil under forespørsel. Kontroller internettforbindelsen og prøv igjen."
     },
-    "connection_failed": {
-      "message": "Tilkobling til serveren mislyktes. Prøv igjen."
-    },
     "bad_request": {
       "message": "Ugyldig inndata. Kontroller inndataene. ({error})"
     },

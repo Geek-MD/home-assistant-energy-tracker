@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Netværksfejl under anmodning. Kontroller internetforbindelsen og prøv igen."
     },
-    "connection_failed": {
-      "message": "Forbindelse til serveren mislykkedes. Prøv igen."
-    },
     "bad_request": {
       "message": "Ugyldig input. Kontroller inputdataene. ({error})"
     },

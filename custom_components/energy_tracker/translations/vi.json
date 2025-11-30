@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Lỗi mạng trong quá trình yêu cầu. Kiểm tra kết nối internet và thử lại."
     },
-    "connection_failed": {
-      "message": "Kết nối với máy chủ thất bại. Thử lại."
-    },
     "bad_request": {
       "message": "Đầu vào không hợp lệ. Kiểm tra dữ liệu đầu vào. ({error})"
     },

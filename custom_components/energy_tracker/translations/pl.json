@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Błąd sieci podczas żądania. Sprawdź połączenie internetowe i spróbuj ponownie."
     },
-    "connection_failed": {
-      "message": "Połączenie z serwerem nie powiodło się. Spróbuj ponownie."
-    },
     "bad_request": {
       "message": "Nieprawidłowe dane wejściowe. Sprawdź dane wejściowe. ({error})"
     },

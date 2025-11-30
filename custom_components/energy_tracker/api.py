@@ -1,193 +1,37 @@
-"""Async API client for the Energy Tracker public API."""
+"""Home Assistant wrapper for Energy Tracker API client."""
 
 from __future__ import annotations
 
-import asyncio
 import logging
 from datetime import datetime
-from typing import Any
 
-import aiohttp
-from aiohttp import ClientError
+from energy_tracker_api import (
+    AuthenticationError,
+    CreateMeterReadingDto,
+    EnergyTrackerAPIError,
+    EnergyTrackerClient,
+    ForbiddenError,
+    NetworkError,
+    RateLimitError,
+    ResourceNotFoundError,
+    TimeoutError,
+    ValidationError,
+)
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers import issue_registry as ir
 
-from .const import DEFAULT_API_BASE_URL, DOMAIN
+from .const import DOMAIN
 
 LOGGER = logging.getLogger(__name__)
-
-REQUEST_TIMEOUT = 10
 
 
 class EnergyTrackerApi:
     def __init__(self, hass: HomeAssistant, token: str) -> None:
         self._hass = hass
         self._token = token
-
-    def _get_headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"Bearer {self._token}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        }
-
-    def _handle_error_response(
-        self,
-        log_prefix: str,
-        status: int,
-        error_message: str | None,
-        headers: aiohttp.typedefs.LooseHeaders | None,
-    ) -> None:
-        """Handle HTTP error responses.
-
-        Args:
-            log_prefix: Prefix for log messages.
-            status: HTTP status code.
-            error_message: Parsed error message from response.
-            headers: Response headers.
-
-        Raises:
-            HomeAssistantError: Always, with localized error message.
-        """
-        if status == 400:
-            msg = error_message or "Invalid input"
-            LOGGER.warning("%s Bad Request: %s", log_prefix, msg)
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="bad_request",
-                translation_placeholders={"error": msg},
-            )
-
-        if status == 401:
-            ir.async_create_issue(
-                self._hass,
-                DOMAIN,
-                f"auth_error_401_{self._token[:8]}",
-                is_fixable=False,
-                severity=ir.IssueSeverity.ERROR,
-                translation_key="auth_error_invalid_token",
-            )
-            LOGGER.error("%s Unauthorized: Check your access token", log_prefix)
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="auth_failed",
-            )
-
-        if status == 403:
-            ir.async_create_issue(
-                self._hass,
-                DOMAIN,
-                f"auth_error_403_{self._token[:8]}",
-                is_fixable=False,
-                severity=ir.IssueSeverity.ERROR,
-                translation_key="auth_error_insufficient_permissions",
-            )
-            LOGGER.error("%s Forbidden: Insufficient permissions", log_prefix)
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="auth_failed",
-            )
-
-        if status == 404:
-            LOGGER.warning("%s Not Found: Device not found", log_prefix)
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="device_not_found",
-            )
-
-        if status == 429:
-            retry_after: int | None = None
-            if headers:
-                retry_header = headers.get("Retry-After")
-                if retry_header:
-                    try:
-                        retry_after = int(retry_header)
-                    except ValueError:
-                        pass
-
-            msg = f"{log_prefix} Too many requests: Rate limit exceeded"
-            if retry_after:
-                msg += f" – Retry after {retry_after} seconds."
-            LOGGER.warning(msg)
-
-            if retry_after:
-                raise HomeAssistantError(
-                    translation_domain=DOMAIN,
-                    translation_key="rate_limit",
-                    translation_placeholders={"retry_after": str(retry_after)},
-                )
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="rate_limit_no_time",
-            )
-
-        if 500 <= status <= 599:
-            msg = error_message or "Internal server error"
-            LOGGER.warning("%s Server error %s: %s", log_prefix, status, msg)
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="server_error",
-                translation_placeholders={"error": msg},
-            )
-
-        # Fallback for other HTTP errors
-        msg = error_message or "Unknown error"
-        LOGGER.warning("%s Unexpected HTTP %s: %s", log_prefix, status, msg)
-        raise HomeAssistantError(
-            translation_domain=DOMAIN,
-            translation_key="unknown_error",
-            translation_placeholders={"error": msg},
-        )
-
-    def _handle_connection_error(self, log_prefix: str, err: BaseException) -> None:
-        if isinstance(err, asyncio.TimeoutError):
-            LOGGER.error(
-                "%s Request timed out after %s seconds",
-                log_prefix,
-                REQUEST_TIMEOUT,
-            )
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="timeout",
-            ) from err
-
-        if isinstance(err, ClientError):
-            LOGGER.error("%s Network error: %s", log_prefix, str(err))
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="network_error",
-            ) from err
-
-        LOGGER.error("%s Unexpected error: %s", log_prefix, str(err))
-        raise HomeAssistantError(
-            translation_domain=DOMAIN,
-            translation_key="connection_failed",
-        ) from err
-
-    async def _parse_error_message(self, resp: aiohttp.ClientResponse) -> str | None:
-        """Parse error message from API response.
-
-        Args:
-            resp: The HTTP response object.
-
-        Returns:
-            Parsed error message string, or None if parsing failed.
-        """
-        try:
-            data = await resp.json()
-            if isinstance(data, dict):
-                message = data.get("message")
-                if isinstance(message, list):
-                    return "; ".join(str(m) for m in message if m)
-                if isinstance(message, str):
-                    return message
-        except Exception:
-            pass
-
-        return None
+        self._client = EnergyTrackerClient(access_token=token)
 
     async def send_meter_reading(
         self,
@@ -211,34 +55,116 @@ class EnergyTrackerApi:
             HomeAssistantError: If the API request fails.
         """
         log_prefix = f"[{source_entity_id}]"
-        ts = timestamp.isoformat(timespec="milliseconds")
 
-        payload: dict[str, Any] = {"value": value, "timestamp": ts}
-
-        url = f"{DEFAULT_API_BASE_URL}/v1/devices/standard/{device_id}/meter-readings"
-        params = (
-            {"allowRounding": str(allow_rounding).lower()} if allow_rounding else None
+        meter_reading = CreateMeterReadingDto(
+            value=value,
+            timestamp=timestamp,
         )
 
-        session = async_get_clientsession(self._hass)
-        timeout = aiohttp.ClientTimeout(total=REQUEST_TIMEOUT)
-
         try:
-            async with session.post(
-                url,
-                json=payload,
-                headers=self._get_headers(),
-                params=params,
-                timeout=timeout,
-                raise_for_status=False,
-            ) as resp:
-                if resp.status >= 400:
-                    error_message = await self._parse_error_message(resp)
-                    self._handle_error_response(
-                        log_prefix, resp.status, error_message, resp.headers
-                    )
+            await self._client.meter_readings.create(
+                device_id=device_id,
+                meter_reading=meter_reading,
+                allow_rounding=allow_rounding,
+            )
+            LOGGER.info("%s Reading sent: %g", log_prefix, value)
 
-                LOGGER.info("%s Reading sent: %g", log_prefix, value)
+        except ValidationError as err:
+            # HTTP 400 - Bad Request
+            LOGGER.warning("%s %s", log_prefix, err)
+            msg = "; ".join(err.api_message) if err.api_message else "Invalid input"
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="bad_request",
+                translation_placeholders={"error": msg},
+            ) from err
 
-        except (asyncio.TimeoutError, ClientError) as err:
-            self._handle_connection_error(log_prefix, err)
+        except AuthenticationError as err:
+            # HTTP 401 - Unauthorized
+            ir.async_create_issue(
+                self._hass,
+                DOMAIN,
+                f"auth_error_401_{self._token[:8]}",
+                is_fixable=False,
+                severity=ir.IssueSeverity.ERROR,
+                translation_key="auth_error_invalid_token",
+            )
+            LOGGER.error("%s %s", log_prefix, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ForbiddenError as err:
+            # HTTP 403 - Forbidden
+            ir.async_create_issue(
+                self._hass,
+                DOMAIN,
+                f"auth_error_403_{self._token[:8]}",
+                is_fixable=False,
+                severity=ir.IssueSeverity.ERROR,
+                translation_key="auth_error_insufficient_permissions",
+            )
+            LOGGER.error("%s %s", log_prefix, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ResourceNotFoundError as err:
+            # HTTP 404 - Not Found
+            LOGGER.warning("%s %s", log_prefix, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="device_not_found",
+            ) from err
+
+        except RateLimitError as err:
+            # HTTP 429 - Rate Limit
+            LOGGER.warning("%s %s", log_prefix, err)
+
+            if err.retry_after:
+                raise HomeAssistantError(
+                    translation_domain=DOMAIN,
+                    translation_key="rate_limit",
+                    translation_placeholders={"retry_after": str(err.retry_after)},
+                ) from err
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="rate_limit_no_time",
+            ) from err
+
+        except TimeoutError as err:
+            # Request timeout
+            LOGGER.error("%s %s", log_prefix, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="timeout",
+            ) from err
+
+        except NetworkError as err:
+            # Network/connection errors
+            LOGGER.error("%s %s", log_prefix, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="network_error",
+            ) from err
+
+        except EnergyTrackerAPIError as err:
+            # Other API errors
+            LOGGER.error("%s %s", log_prefix, err)
+            msg = "; ".join(err.api_message) if err.api_message else str(err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="server_error",
+                translation_placeholders={"error": msg},
+            ) from err
+
+        except Exception as err:
+            # Unexpected errors
+            LOGGER.exception("%s Unexpected error: %s", log_prefix, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="unknown_error",
+                translation_placeholders={"error": str(err)},
+            ) from err

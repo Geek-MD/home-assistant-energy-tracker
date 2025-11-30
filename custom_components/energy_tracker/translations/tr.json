@@ -46,9 +46,6 @@
     "network_error": {
       "message": "İstek sırasında ağ hatası oluştu. İnternet bağlantısını kontrol edin ve tekrar deneyin."
     },
-    "connection_failed": {
-      "message": "Sunucuya bağlanılamadı. Tekrar deneyin."
-    },
     "bad_request": {
       "message": "Geçersiz giriş. Giriş verilerini kontrol edin. ({error})"
     },

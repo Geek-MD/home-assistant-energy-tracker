@@ -30,4 +30,5 @@ htmlcov/
 
 # macOS / Editor
 .DS_Store
-.vscode/
+.vscode/*.code-workspace
+.vscode/launch.json

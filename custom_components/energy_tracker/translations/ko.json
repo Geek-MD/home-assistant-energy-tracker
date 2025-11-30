@@ -46,9 +46,6 @@
     "network_error": {
       "message": "요청 중 네트워크 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도하십시오."
     },
-    "connection_failed": {
-      "message": "서버 연결에 실패했습니다. 다시 시도하십시오."
-    },
     "bad_request": {
       "message": "잘못된 입력입니다. 입력 데이터를 확인하십시오. ({error})"
     },

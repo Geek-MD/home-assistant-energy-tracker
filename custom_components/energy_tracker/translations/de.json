@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Netzwerkfehler bei Anfrage. Bitte Internetverbindung prüfen und erneut versuchen."
     },
-    "connection_failed": {
-      "message": "Verbindung zum Server fehlgeschlagen. Bitte erneut versuchen."
-    },
     "bad_request": {
       "message": "Ungültige Eingabe. Bitte Eingabedaten prüfen. ({error})"
     },

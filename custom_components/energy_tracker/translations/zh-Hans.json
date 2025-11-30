@@ -46,9 +46,6 @@
     "network_error": {
       "message": "请求期间发生网络错误。请检查互联网连接并重试。"
     },
-    "connection_failed": {
-      "message": "连接服务器失败。请重试。"
-    },
     "bad_request": {
       "message": "输入无效。请检查输入数据。({error})"
     },

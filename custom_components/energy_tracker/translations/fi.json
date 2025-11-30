@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Verkkovirhe pyynnön aikana. Tarkista internetyhteys ja yritä uudelleen."
     },
-    "connection_failed": {
-      "message": "Yhteys palvelimeen epäonnistui. Yritä uudelleen."
-    },
     "bad_request": {
       "message": "Virheellinen syöte. Tarkista syötetiedot. ({error})"
     },

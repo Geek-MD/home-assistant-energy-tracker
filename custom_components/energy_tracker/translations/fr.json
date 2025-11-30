@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Erreur réseau lors de la requête. Veuillez vérifier la connexion Internet et réessayer."
     },
-    "connection_failed": {
-      "message": "Échec de la connexion au serveur. Veuillez réessayer."
-    },
     "bad_request": {
       "message": "Entrée non valide. Veuillez vérifier les données d'entrée. ({error})"
     },

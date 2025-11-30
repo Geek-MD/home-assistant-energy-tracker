@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Hálózati hiba történt a kérés során. Ellenőrizze az internetkapcsolatot, és próbálja újra."
     },
-    "connection_failed": {
-      "message": "A szerverhez való csatlakozás sikertelen. Próbálja újra."
-    },
     "bad_request": {
       "message": "Érvénytelen bemenet. Ellenőrizze a bemeneti adatokat. ({error})"
     },

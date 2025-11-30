@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Nätverksfel vid begäran. Kontrollera internetanslutningen och försök igen."
     },
-    "connection_failed": {
-      "message": "Anslutning till servern misslyckades. Försök igen."
-    },
     "bad_request": {
       "message": "Ogiltig indata. Kontrollera indata. ({error})"
     },

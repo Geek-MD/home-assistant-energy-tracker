@@ -46,9 +46,6 @@
     "network_error": {
       "message": "Chyba sítě během požadavku. Zkontrolujte připojení k internetu a zkuste to znovu."
     },
-    "connection_failed": {
-      "message": "Připojení k serveru selhalo. Zkuste to znovu."
-    },
     "bad_request": {
       "message": "Neplatný vstup. Zkontrolujte vstupní data. ({error})"
     },
