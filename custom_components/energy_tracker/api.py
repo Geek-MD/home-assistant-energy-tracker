@@ -94,8 +94,8 @@ class EnergyTrackerApi:
             # HTTP 401 - Unauthorized
             ir.async_create_issue(
                 self._hass,
+                DOMAIN,
                 issue_id=f"auth_error_401_{self._token[:8]}",
-                issue_domain=DOMAIN,
                 is_fixable=False,
                 severity=ir.IssueSeverity.ERROR,
                 translation_key="auth_error_invalid_token",
@@ -110,8 +110,8 @@ class EnergyTrackerApi:
             # HTTP 403 - Forbidden
             ir.async_create_issue(
                 self._hass,
+                DOMAIN,
                 issue_id=f"auth_error_403_{self._token[:8]}",
-                issue_domain=DOMAIN,
                 is_fixable=False,
                 severity=ir.IssueSeverity.ERROR,
                 translation_key="auth_error_insufficient_permissions",
