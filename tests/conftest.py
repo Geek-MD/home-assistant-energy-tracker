@@ -45,14 +45,3 @@ def api_token() -> str:
 def device_id() -> str:
     """Return a valid UUID device ID."""
     return "12345678-1234-1234-1234-123456789abc"
-
-
-@pytest.fixture
-def mock_aiohttp_session() -> Generator[MagicMock]:
-    """Mock aiohttp ClientSession."""
-    with patch(
-        "custom_components.energy_tracker.api.async_get_clientsession"
-    ) as mock_get_session:
-        session = MagicMock()
-        mock_get_session.return_value = session
-        yield session

@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Yapılandırma oluştur",
-        "description": "Energy Tracker hesabınıza erişimi yapılandırın.",
+        "title": "Energy Tracker'ı Kur",
+        "description": "Energy Tracker hesabınıza bağlanmak için kişisel erişim belirtecinizi girin.",
         "data": {
-          "name": "Ad",
-          "api_token": "Kişisel erişim jetonu"
+          "api_token": "Kişisel erişim belirteci"
         }
       },
       "reconfigure": {
-        "title": "Yapılandırmayı değiştir",
-        "description": "Energy Tracker hesap ayarlarınızı güncelleyin. Mevcut jetonu korumak için jeton alanını boş bırakın.",
+        "title": "Energy Tracker'ı Yeniden Yapılandır",
+        "description": "Energy Tracker hesap belirtecinizi güncelleyin. Mevcut belirteci korumak için belirteç alanını boş bırakın.",
         "data": {
-          "name": "Ad",
           "api_token": "Kişisel erişim jetonu (mevcut olanı korumak için boş bırakın)"
         }
       }
     },
     "error": {
-      "empty_name": "Ad boş olamaz.",
-      "empty_token": "Kişisel erişim jetonu boş olamaz.",
-      "name_already_exists": "Bu ad zaten kullanılıyor. Farklı bir ad seçin."
+      "empty_token": "Kişisel erişim jetonu boş olamaz."
     },
     "abort": {
       "already_configured": "Bu kişisel erişim jetonu zaten yapılandırılmış. Her jeton yalnızca bir kez kullanılabilir.",

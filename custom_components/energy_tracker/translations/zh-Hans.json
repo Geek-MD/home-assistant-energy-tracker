@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "创建配置",
-        "description": "配置您的 Energy Tracker 账户访问权限。",
+        "title": "设置 Energy Tracker",
+        "description": "输入您的个人访问令牌以连接到您的 Energy Tracker 账户。",
         "data": {
-          "name": "名称",
           "api_token": "个人访问令牌"
         }
       },
       "reconfigure": {
-        "title": "修改配置",
-        "description": "更新您的 Energy Tracker 账户设置。留空令牌字段以保留现有令牌。",
+        "title": "重新配置 Energy Tracker",
+        "description": "更新您的 Energy Tracker 账户令牌。将令牌字段留空以保留现有令牌。",
         "data": {
-          "name": "名称",
           "api_token": "个人访问令牌(留空以保留现有令牌)"
         }
       }
     },
     "error": {
-      "empty_name": "名称不能为空。",
-      "empty_token": "个人访问令牌不能为空。",
-      "name_already_exists": "此名称已被使用。请选择其他名称。"
+      "empty_token": "个人访问令牌不能为空。"
     },
     "abort": {
       "already_configured": "此个人访问令牌已配置。每个令牌只能使用一次。",

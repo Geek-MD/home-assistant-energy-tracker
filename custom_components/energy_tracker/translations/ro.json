@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Creare configurație",
-        "description": "Configurați accesul la contul dvs. Energy Tracker.",
+        "title": "Configurați Energy Tracker",
+        "description": "Introduceți token-ul dvs. de acces personal pentru a vă conecta la contul Energy Tracker.",
         "data": {
-          "name": "Nume",
           "api_token": "Token de acces personal"
         }
       },
       "reconfigure": {
-        "title": "Modificare configurație",
-        "description": "Actualizați setările contului Energy Tracker. Lăsați câmpul pentru token gol pentru a păstra tokenul existent.",
+        "title": "Reconfigurați Energy Tracker",
+        "description": "Actualizați token-ul contului dvs. Energy Tracker. Lăsați câmpul token-ului gol pentru a păstra token-ul existent.",
         "data": {
-          "name": "Nume",
           "api_token": "Token de acces personal (lăsați gol pentru a păstra existentul)"
         }
       }
     },
     "error": {
-      "empty_name": "Numele nu poate fi gol.",
-      "empty_token": "Tokenul de acces personal nu poate fi gol.",
-      "name_already_exists": "Acest nume este deja utilizat. Alegeți un alt nume."
+      "empty_token": "Tokenul de acces personal nu poate fi gol."
     },
     "abort": {
       "already_configured": "Acest token de acces personal este deja configurat. Fiecare token poate fi utilizat o singură dată.",

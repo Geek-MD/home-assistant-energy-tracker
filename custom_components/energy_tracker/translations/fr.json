@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Créer une configuration",
-        "description": "Configurez l'accès à votre compte Energy Tracker.",
+        "title": "Configurer Energy Tracker",
+        "description": "Entrez votre jeton d'accès personnel pour vous connecter à votre compte Energy Tracker.",
         "data": {
-          "name": "Nom",
           "api_token": "Jeton d'accès personnel"
         }
       },
       "reconfigure": {
-        "title": "Modifier la configuration",
-        "description": "Mettez à jour les paramètres de votre compte Energy Tracker. Laissez le champ du jeton vide pour conserver le jeton existant.",
+        "title": "Reconfigurer Energy Tracker",
+        "description": "Mettez à jour le jeton de votre compte Energy Tracker. Laissez le champ du jeton vide pour conserver le jeton existant.",
         "data": {
-          "name": "Nom",
           "api_token": "Jeton d'accès personnel (laisser vide pour conserver l'existant)"
         }
       }
     },
     "error": {
-      "empty_name": "Le nom ne peut pas être vide.",
-      "empty_token": "Le jeton d'accès personnel ne peut pas être vide.",
-      "name_already_exists": "Ce nom est déjà utilisé. Veuillez choisir un nom différent."
+      "empty_token": "Le jeton d'accès personnel ne peut pas être vide."
     },
     "abort": {
       "already_configured": "Ce jeton d'accès personnel est déjà configuré. Chaque jeton ne peut être utilisé qu'une seule fois.",

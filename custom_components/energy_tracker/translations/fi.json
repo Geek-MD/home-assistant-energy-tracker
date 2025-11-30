@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Luo kokoonpano",
-        "description": "Määritä pääsy Energy Tracker -tilillesi.",
+        "title": "Määritä Energy Tracker",
+        "description": "Syötä henkilökohtainen käyttöoikeustunnuksesi yhdistääksesi Energy Tracker -tilillesi.",
         "data": {
-          "name": "Nimi",
           "api_token": "Henkilökohtainen käyttöoikeustunnus"
         }
       },
       "reconfigure": {
-        "title": "Muokkaa kokoonpanoa",
-        "description": "Päivitä Energy Tracker -tilin asetukset. Jätä tunnuskenttä tyhjäksi säilyttääksesi nykyisen tunnuksen.",
+        "title": "Määritä Energy Tracker uudelleen",
+        "description": "Päivitä Energy Tracker -tilisi tunnus. Jätä tunnuskenttä tyhjäksi säilyttääksesi nykyisen tunnuksen.",
         "data": {
-          "name": "Nimi",
           "api_token": "Henkilökohtainen käyttöoikeustunnus (jätä tyhjäksi säilyttääksesi nykyisen)"
         }
       }
     },
     "error": {
-      "empty_name": "Nimi ei voi olla tyhjä.",
-      "empty_token": "Henkilökohtainen käyttöoikeustunnus ei voi olla tyhjä.",
-      "name_already_exists": "Tämä nimi on jo käytössä. Valitse toinen nimi."
+      "empty_token": "Henkilökohtainen käyttöoikeustunnus ei voi olla tyhjä."
     },
     "abort": {
       "already_configured": "Tämä henkilökohtainen käyttöoikeustunnus on jo määritetty. Jokaista tunnusta voidaan käyttää vain kerran.",

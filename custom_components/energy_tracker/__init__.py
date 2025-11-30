@@ -36,6 +36,19 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 
 def _select_token_for_service(hass: HomeAssistant, call: ServiceCall) -> str | None:
+    """Select the API token for a service call.
+
+    Retrieves the API token for the Energy Tracker integration based on the
+    config entry ID provided in the service call data.
+
+    Args:
+        hass: The Home Assistant instance.
+        call: The service call containing the 'entry_id'.
+
+    Returns:
+        The API token as a string if found, otherwise None.
+    """
+
     domain_data: dict[str, dict[str, Any]] | None = hass.data.get(DOMAIN)
     if not domain_data:
         LOGGER.debug("No Energy Tracker accounts configured")
@@ -71,6 +84,7 @@ async def async_handle_send_meter_reading(
     Raises:
         HomeAssistantError: If the meter reading could not be sent.
     """
+
     device_id = call.data.get("device_id")
     if device_id:
         device_id = device_id.strip()
@@ -148,6 +162,16 @@ async def async_handle_send_meter_reading(
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up the Energy Tracker integration from a config entry.
+
+    Args:
+        hass: The Home Assistant instance.
+        entry: The configuration entry to set up.
+
+    Returns:
+        True if setup was successful, False otherwise.
+    """
+
     LOGGER.debug("Setting up config entry %s", entry.entry_id)
 
     hass.data.setdefault(DOMAIN, {})
@@ -172,6 +196,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a config entry for the Energy Tracker integration.
+
+    Removes the entry's data from hass.data and unregisters the service
+    if this was the last loaded config entry.
+
+    Args:
+        hass: The Home Assistant instance.
+        entry: The config entry to unload.
+
+    Returns:
+        True if the unload was successful.
+    """
     LOGGER.debug("Unloading config entry %s", entry.entry_id)
 
     domain_data = hass.data.get(DOMAIN, {})

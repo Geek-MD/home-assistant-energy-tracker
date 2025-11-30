@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Opprett konfigurasjon",
-        "description": "Konfigurer tilgang til Energy Tracker-kontoen din.",
+        "title": "Konfigurer Energy Tracker",
+        "description": "Skriv inn din personlige tilgangstoken for å koble til Energy Tracker-kontoen din.",
         "data": {
-          "name": "Navn",
           "api_token": "Personlig tilgangstoken"
         }
       },
       "reconfigure": {
-        "title": "Endre konfigurasjon",
-        "description": "Oppdater innstillingene for Energy Tracker-kontoen din. La tokenfeltet stå tomt for å beholde eksisterende token.",
+        "title": "Rekonfigurer Energy Tracker",
+        "description": "Oppdater Energy Tracker-kontotokenet ditt. La token-feltet stå tomt for å beholde eksisterende token.",
         "data": {
-          "name": "Navn",
           "api_token": "Personlig tilgangstoken (la stå tomt for å beholde eksisterende)"
         }
       }
     },
     "error": {
-      "empty_name": "Navnet kan ikke være tomt.",
-      "empty_token": "Personlig tilgangstoken kan ikke være tom.",
-      "name_already_exists": "Dette navnet er allerede i bruk. Velg et annet navn."
+      "empty_token": "Personlig tilgangstoken kan ikke være tom."
     },
     "abort": {
       "already_configured": "Denne personlige tilgangstokenen er allerede konfigurert. Hver token kan bare brukes én gang.",

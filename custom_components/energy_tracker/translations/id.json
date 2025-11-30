@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Buat konfigurasi",
-        "description": "Konfigurasikan akses ke akun Energy Tracker Anda.",
+        "title": "Siapkan Energy Tracker",
+        "description": "Masukkan token akses pribadi Anda untuk terhubung ke akun Energy Tracker Anda.",
         "data": {
-          "name": "Nama",
           "api_token": "Token akses pribadi"
         }
       },
       "reconfigure": {
-        "title": "Ubah konfigurasi",
-        "description": "Perbarui pengaturan akun Energy Tracker Anda. Biarkan bidang token kosong untuk mempertahankan token yang ada.",
+        "title": "Konfigurasi Ulang Energy Tracker",
+        "description": "Perbarui token akun Energy Tracker Anda. Biarkan bidang token kosong untuk mempertahankan token yang ada.",
         "data": {
-          "name": "Nama",
           "api_token": "Token akses pribadi (biarkan kosong untuk mempertahankan yang ada)"
         }
       }
     },
     "error": {
-      "empty_name": "Nama tidak boleh kosong.",
-      "empty_token": "Token akses pribadi tidak boleh kosong.",
-      "name_already_exists": "Nama ini sudah digunakan. Pilih nama lain."
+      "empty_token": "Token akses pribadi tidak boleh kosong."
     },
     "abort": {
       "already_configured": "Token akses pribadi ini sudah dikonfigurasi. Setiap token hanya dapat digunakan sekali.",

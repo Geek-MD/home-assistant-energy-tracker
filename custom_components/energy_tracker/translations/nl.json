@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Configuratie aanmaken",
-        "description": "Configureer toegang tot je Energy Tracker-account.",
+        "title": "Energy Tracker instellen",
+        "description": "Voer uw persoonlijke toegangstoken in om verbinding te maken met uw Energy Tracker-account.",
         "data": {
-          "name": "Naam",
           "api_token": "Persoonlijk toegangstoken"
         }
       },
       "reconfigure": {
-        "title": "Configuratie wijzigen",
-        "description": "Werk je Energy Tracker-accountinstellingen bij. Laat het tokenveld leeg om het bestaande token te behouden.",
+        "title": "Energy Tracker opnieuw configureren",
+        "description": "Werk uw Energy Tracker-accounttoken bij. Laat het tokenveld leeg om het bestaande token te behouden.",
         "data": {
-          "name": "Naam",
           "api_token": "Persoonlijk toegangstoken (leeg laten om bestaande te behouden)"
         }
       }
     },
     "error": {
-      "empty_name": "Naam mag niet leeg zijn.",
-      "empty_token": "Persoonlijk toegangstoken mag niet leeg zijn.",
-      "name_already_exists": "Deze naam is al in gebruik. Kies een andere naam."
+      "empty_token": "Persoonlijk toegangstoken mag niet leeg zijn."
     },
     "abort": {
       "already_configured": "Dit persoonlijke toegangstoken is al geconfigureerd. Elk token kan slechts één keer worden gebruikt.",

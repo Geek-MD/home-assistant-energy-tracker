@@ -28,7 +28,18 @@ LOGGER = logging.getLogger(__name__)
 
 
 class EnergyTrackerApi:
+    """Home Assistant wrapper for the Energy Tracker API client.
+
+    Handles sending meter readings and error translation to Home Assistant exceptions.
+    """
+
     def __init__(self, hass: HomeAssistant, token: str) -> None:
+        """Initialize the EnergyTrackerApi wrapper.
+
+        Args:
+            hass: The Home Assistant instance.
+            token: The Energy Tracker API access token.
+        """
         self._hass = hass
         self._token = token
         self._client = EnergyTrackerClient(access_token=token)
@@ -83,8 +94,8 @@ class EnergyTrackerApi:
             # HTTP 401 - Unauthorized
             ir.async_create_issue(
                 self._hass,
-                DOMAIN,
-                f"auth_error_401_{self._token[:8]}",
+                issue_id=f"auth_error_401_{self._token[:8]}",
+                issue_domain=DOMAIN,
                 is_fixable=False,
                 severity=ir.IssueSeverity.ERROR,
                 translation_key="auth_error_invalid_token",
@@ -99,8 +110,8 @@ class EnergyTrackerApi:
             # HTTP 403 - Forbidden
             ir.async_create_issue(
                 self._hass,
-                DOMAIN,
-                f"auth_error_403_{self._token[:8]}",
+                issue_id=f"auth_error_403_{self._token[:8]}",
+                issue_domain=DOMAIN,
                 is_fixable=False,
                 severity=ir.IssueSeverity.ERROR,
                 translation_key="auth_error_insufficient_permissions",

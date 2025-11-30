@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Skapa konfiguration",
-        "description": "Konfigurera åtkomst till ditt Energy Tracker-konto.",
+        "title": "Konfigurera Energy Tracker",
+        "description": "Ange din personliga åtkomsttoken för att ansluta till ditt Energy Tracker-konto.",
         "data": {
-          "name": "Namn",
           "api_token": "Personlig åtkomsttoken"
         }
       },
       "reconfigure": {
-        "title": "Ändra konfiguration",
-        "description": "Uppdatera dina Energy Tracker-kontoinställningar. Lämna tokenfältet tomt för att behålla befintlig token.",
+        "title": "Omkonfigurera Energy Tracker",
+        "description": "Uppdatera din Energy Tracker-kontotoken. Lämna tokenfältet tomt för att behålla den befintliga token.",
         "data": {
-          "name": "Namn",
           "api_token": "Personlig åtkomsttoken (lämna tomt för att behålla befintlig)"
         }
       }
     },
     "error": {
-      "empty_name": "Namnet får inte vara tomt.",
-      "empty_token": "Personlig åtkomsttoken får inte vara tom.",
-      "name_already_exists": "Detta namn används redan. Välj ett annat namn."
+      "empty_token": "Personlig åtkomsttoken får inte vara tom."
     },
     "abort": {
       "already_configured": "Denna personliga åtkomsttoken är redan konfigurerad. Varje token kan endast användas en gång.",

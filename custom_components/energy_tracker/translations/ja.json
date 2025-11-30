@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "設定を作成",
-        "description": "Energy Tracker アカウントへのアクセスを設定します。",
+        "title": "Energy Tracker をセットアップ",
+        "description": "Energy Tracker アカウントに接続するために個人アクセストークンを入力してください。",
         "data": {
-          "name": "名前",
           "api_token": "個人アクセストークン"
         }
       },
       "reconfigure": {
-        "title": "設定を変更",
-        "description": "Energy Tracker アカウントの設定を更新します。既存のトークンを保持する場合は、トークンフィールドを空のままにしてください。",
+        "title": "Energy Tracker を再設定",
+        "description": "Energy Tracker アカウントトークンを更新します。既存のトークンを保持する場合は、トークンフィールドを空のままにしておいてください。",
         "data": {
-          "name": "名前",
           "api_token": "個人アクセストークン(既存のものを保持する場合は空のまま)"
         }
       }
     },
     "error": {
-      "empty_name": "名前を空にすることはできません。",
-      "empty_token": "個人アクセストークンを空にすることはできません。",
-      "name_already_exists": "この名前は既に使用されています。別の名前を選択してください。"
+      "empty_token": "個人アクセストークンを空にすることはできません。"
     },
     "abort": {
       "already_configured": "この個人アクセストークンは既に設定されています。各トークンは一度しか使用できません。",

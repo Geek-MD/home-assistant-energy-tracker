@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Konfiguráció létrehozása",
-        "description": "Állítsa be az Energy Tracker-fiókhoz való hozzáférést.",
+        "title": "Energy Tracker beállítása",
+        "description": "Adja meg a személyes hozzáférési tokenjét az Energy Tracker fiókjához való csatlakozáshoz.",
         "data": {
-          "name": "Név",
           "api_token": "Személyes hozzáférési token"
         }
       },
       "reconfigure": {
-        "title": "Konfiguráció módosítása",
-        "description": "Frissítse az Energy Tracker-fiók beállításait. Hagyja üresen a token mezőt a meglévő token megtartásához.",
+        "title": "Energy Tracker újrakonfigurálása",
+        "description": "Frissítse az Energy Tracker fiókja tokenjét. Hagyja üresen a token mezőt a meglévő token megtartásához.",
         "data": {
-          "name": "Név",
           "api_token": "Személyes hozzáférési token (hagyja üresen a meglévő megtartásához)"
         }
       }
     },
     "error": {
-      "empty_name": "A név nem lehet üres.",
-      "empty_token": "A személyes hozzáférési token nem lehet üres.",
-      "name_already_exists": "Ez a név már használatban van. Válasszon másik nevet."
+      "empty_token": "A személyes hozzáférési token nem lehet üres."
     },
     "abort": {
       "already_configured": "Ez a személyes hozzáférési token már konfigurálva van. Minden token csak egyszer használható.",

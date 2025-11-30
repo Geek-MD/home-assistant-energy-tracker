@@ -59,7 +59,7 @@ jobs:
           
           # Copy component files
           mkdir -p core-fork/homeassistant/components/energy_tracker
-          cp -r custom_components/energy_tracker/* core-fork/homeassistant/components/energy_tracker/
+          cp -r custom_components/energy_tracker/. core-fork/homeassistant/components/energy_tracker/
 
       - name: Sync test files
         run: |
@@ -69,6 +69,24 @@ jobs:
           # Copy test files
           mkdir -p core-fork/tests/components/energy_tracker
           cp -r tests/* core-fork/tests/components/energy_tracker/
+
+      - name: Rewrite imports for Core
+        run: |
+          # Rewrite imports from custom_components to homeassistant.components
+          find core-fork/homeassistant/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from custom_components\.energy_tracker/from homeassistant.components.energy_tracker/g'
+          find core-fork/homeassistant/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/import custom_components\.energy_tracker/import homeassistant.components.energy_tracker/g'
+          find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from custom_components\.energy_tracker/from homeassistant.components.energy_tracker/g'
+          find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/import custom_components\.energy_tracker/import homeassistant.components.energy_tracker/g'
+
+          # Rewrite test imports from pytest_homeassistant_custom_component to homeassistant
+          find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from pytest_homeassistant_custom_component\.common import MockConfigEntry/from homeassistant.config_entries import MockConfigEntry/g'
+          find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from pytest_homeassistant_custom_component\.common/from tests.common/g'
+
+          # Remove pytest_homeassistant_custom_component plugin line from conftest.py (not needed in core)
+          find core-fork/tests/components/energy_tracker -type f -name "conftest.py" -print0 | xargs -0 sed -i '/pytest_plugins = "pytest_homeassistant_custom_component"/d'
+
+          # Remove auto_enable_custom_integrations fixture from conftest.py (not needed in core)
+          find core-fork/tests/components/energy_tracker -type f -name "conftest.py" -print0 | xargs -0 sed -i '/@pytest.fixture(autouse=True)/,/yield/d'
 
       - name: Create commit
         working-directory: core-fork

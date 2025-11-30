@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Utwórz konfigurację",
-        "description": "Skonfiguruj dostęp do swojego konta Energy Tracker.",
+        "title": "Skonfiguruj Energy Tracker",
+        "description": "Wprowadź swój osobisty token dostępu, aby połączyć się z kontem Energy Tracker.",
         "data": {
-          "name": "Nazwa",
           "api_token": "Osobisty token dostępu"
         }
       },
       "reconfigure": {
-        "title": "Modyfikuj konfigurację",
-        "description": "Zaktualizuj ustawienia konta Energy Tracker. Pozostaw pole tokena puste, aby zachować istniejący token.",
+        "title": "Przekonfiguruj Energy Tracker",
+        "description": "Zaktualizuj token konta Energy Tracker. Pozostaw pole tokenu puste, aby zachować istniejący token.",
         "data": {
-          "name": "Nazwa",
           "api_token": "Osobisty token dostępu (pozostaw puste, aby zachować istniejący)"
         }
       }
     },
     "error": {
-      "empty_name": "Nazwa nie może być pusta.",
-      "empty_token": "Osobisty token dostępu nie może być pusty.",
-      "name_already_exists": "Ta nazwa jest już w użyciu. Wybierz inną nazwę."
+      "empty_token": "Osobisty token dostępu nie może być pusty."
     },
     "abort": {
       "already_configured": "Ten osobisty token dostępu jest już skonfigurowany. Każdy token może być użyty tylko raz.",

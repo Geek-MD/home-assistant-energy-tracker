@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Tạo cấu hình",
-        "description": "Cấu hình quyền truy cập vào tài khoản Energy Tracker của bạn.",
+        "title": "Thiết lập Energy Tracker",
+        "description": "Nhập mã token truy cập cá nhân của bạn để kết nối với tài khoản Energy Tracker của bạn.",
         "data": {
-          "name": "Tên",
-          "api_token": "Mã thông báo truy cập cá nhân"
+          "api_token": "Mã token truy cập cá nhân"
         }
       },
       "reconfigure": {
-        "title": "Sửa đổi cấu hình",
-        "description": "Cập nhật cài đặt tài khoản Energy Tracker của bạn. Để trống trường mã thông báo để giữ mã thông báo hiện có.",
+        "title": "Cấu hình lại Energy Tracker",
+        "description": "Cập nhật token tài khoản Energy Tracker của bạn. Để trống trường token để giữ token hiện tại.",
         "data": {
-          "name": "Tên",
           "api_token": "Mã thông báo truy cập cá nhân (để trống để giữ mã hiện có)"
         }
       }
     },
     "error": {
-      "empty_name": "Tên không được để trống.",
-      "empty_token": "Mã thông báo truy cập cá nhân không được để trống.",
-      "name_already_exists": "Tên này đã được sử dụng. Chọn tên khác."
+      "empty_token": "Mã thông báo truy cập cá nhân không được để trống."
     },
     "abort": {
       "already_configured": "Mã thông báo truy cập cá nhân này đã được cấu hình. Mỗi mã thông báo chỉ có thể được sử dụng một lần.",

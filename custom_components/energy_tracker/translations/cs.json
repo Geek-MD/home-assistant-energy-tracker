@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "Vytvořit konfiguraci",
-        "description": "Nakonfigurujte přístup k účtu Energy Tracker.",
+        "title": "Nastavit Energy Tracker",
+        "description": "Zadejte svůj osobní přístupový token pro připojení ke svému účtu Energy Tracker.",
         "data": {
-          "name": "Název",
           "api_token": "Osobní přístupový token"
         }
       },
       "reconfigure": {
-        "title": "Upravit konfiguraci",
-        "description": "Aktualizujte nastavení účtu Energy Tracker. Ponechte pole tokenu prázdné pro zachování existujícího tokenu.",
+        "title": "Překonfigurovat Energy Tracker",
+        "description": "Aktualizujte token svého účtu Energy Tracker. Ponechte pole tokenu prázdné, chcete-li zachovat stávající token.",
         "data": {
-          "name": "Název",
           "api_token": "Osobní přístupový token (ponechte prázdné pro zachování existujícího)"
         }
       }
     },
     "error": {
-      "empty_name": "Název nesmí být prázdný.",
-      "empty_token": "Osobní přístupový token nesmí být prázdný.",
-      "name_already_exists": "Tento název se již používá. Zvolte jiný název."
+      "empty_token": "Osobní přístupový token nesmí být prázdný."
     },
     "abort": {
       "already_configured": "Tento osobní přístupový token je již nakonfigurován. Každý token lze použít pouze jednou.",

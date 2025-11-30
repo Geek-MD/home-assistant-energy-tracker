@@ -2,26 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "구성 만들기",
-        "description": "Energy Tracker 계정 액세스를 구성합니다.",
+        "title": "Energy Tracker 설정",
+        "description": "Energy Tracker 계정에 연결하려면 개인 액세스 토큰을 입력하세요.",
         "data": {
-          "name": "이름",
           "api_token": "개인 액세스 토큰"
         }
       },
       "reconfigure": {
-        "title": "구성 수정",
-        "description": "Energy Tracker 계정 설정을 업데이트합니다. 기존 토큰을 유지하려면 토큰 필드를 비워 두십시오.",
+        "title": "Energy Tracker 재구성",
+        "description": "Energy Tracker 계정 토큰을 업데이트합니다. 기존 토큰을 유지하려면 토큰 필드를 비워 두세요.",
         "data": {
-          "name": "이름",
           "api_token": "개인 액세스 토큰(기존 토큰을 유지하려면 비워 둠)"
         }
       }
     },
     "error": {
-      "empty_name": "이름은 비워 둘 수 없습니다.",
-      "empty_token": "개인 액세스 토큰은 비워 둘 수 없습니다.",
-      "name_already_exists": "이 이름은 이미 사용 중입니다. 다른 이름을 선택하십시오."
+      "empty_token": "개인 액세스 토큰은 비워 둘 수 없습니다."
     },
     "abort": {
       "already_configured": "이 개인 액세스 토큰은 이미 구성되어 있습니다. 각 토큰은 한 번만 사용할 수 있습니다.",

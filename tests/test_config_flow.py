@@ -5,7 +5,6 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -27,16 +26,14 @@ async def test_user_form_create_entry(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
-            CONF_NAME: "My Energy Tracker",
             CONF_API_TOKEN: "test-token-123",
         },
     )
 
     # Assert
     assert result2["type"] == FlowResultType.CREATE_ENTRY
-    assert result2["title"] == "My Energy Tracker"
+    assert result2["title"] == "Energy Tracker Account"
     assert result2["data"] == {
-        CONF_NAME: "My Energy Tracker",
         CONF_API_TOKEN: "test-token-123",
     }
 
@@ -52,7 +49,6 @@ async def test_user_form_empty_token(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
-            CONF_NAME: "My Energy Tracker",
             CONF_API_TOKEN: "   ",
         },
     )
@@ -63,65 +59,13 @@ async def test_user_form_empty_token(hass: HomeAssistant) -> None:
     assert result2["errors"] == {"api_token": "empty_token"}
 
 
-async def test_user_form_empty_name(hass: HomeAssistant) -> None:
-    """Test validation error when name is empty."""
-    # Arrange
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-
-    # Act
-    result2 = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {
-            CONF_NAME: "   ",
-            CONF_API_TOKEN: "test-token-123",
-        },
-    )
-
-    # Assert
-    assert result2["type"] == FlowResultType.FORM
-    assert result2["step_id"] == "user"
-    assert result2["errors"] == {"name": "empty_name"}
-
-
-async def test_user_form_duplicate_name(hass: HomeAssistant) -> None:
-    """Test validation error when name already exists."""
-    # Arrange
-    existing_entry = MockConfigEntry(
-        domain=DOMAIN,
-        title="Existing Entry",
-        data={CONF_NAME: "Existing Entry", CONF_API_TOKEN: "existing-token"},
-        unique_id="existing-token",
-    )
-    existing_entry.add_to_hass(hass)
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-
-    # Act
-    result2 = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {
-            CONF_NAME: "Existing Entry",
-            CONF_API_TOKEN: "new-token-123",
-        },
-    )
-
-    # Assert
-    assert result2["type"] == FlowResultType.FORM
-    assert result2["step_id"] == "user"
-    assert result2["errors"] == {"name": "name_already_exists"}
-
-
 async def test_user_form_duplicate_token(hass: HomeAssistant) -> None:
     """Test abort when token already configured."""
     # Arrange
     existing_entry = MockConfigEntry(
         domain=DOMAIN,
-        title="Existing Entry",
-        data={CONF_NAME: "Existing Entry", CONF_API_TOKEN: "duplicate-token"},
+        title="Energy Tracker",
+        data={CONF_API_TOKEN: "duplicate-token"},
         unique_id="duplicate-token",
     )
     existing_entry.add_to_hass(hass)
@@ -134,7 +78,6 @@ async def test_user_form_duplicate_token(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
-            CONF_NAME: "New Entry",
             CONF_API_TOKEN: "duplicate-token",
         },
     )
@@ -155,7 +98,6 @@ async def test_user_form_input_trimming(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
-            CONF_NAME: "  My Energy Tracker  ",
             CONF_API_TOKEN: "  test-token-123  ",
         },
     )
@@ -163,47 +105,7 @@ async def test_user_form_input_trimming(hass: HomeAssistant) -> None:
     # Assert
     assert result2["type"] == FlowResultType.CREATE_ENTRY
     assert result2["data"] == {
-        CONF_NAME: "My Energy Tracker",
         CONF_API_TOKEN: "test-token-123",
-    }
-
-
-async def test_reconfigure_form_update_name(hass: HomeAssistant) -> None:
-    """Test reconfiguring to update only the name."""
-    # Arrange
-    entry = MockConfigEntry(
-        domain=DOMAIN,
-        title="Old Name",
-        data={CONF_NAME: "Old Name", CONF_API_TOKEN: "original-token"},
-        unique_id="original-token",
-    )
-    entry.add_to_hass(hass)
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN,
-        context={
-            "source": "reconfigure",
-            "entry_id": entry.entry_id,
-        },
-    )
-    assert result["type"] == FlowResultType.FORM
-    assert result["step_id"] == "reconfigure"
-
-    # Act
-    with patch("homeassistant.config_entries.ConfigEntries.async_reload"):
-        result2 = await hass.config_entries.flow.async_configure(
-            result["flow_id"],
-            {
-                CONF_NAME: "New Name",
-            },
-        )
-
-    # Assert
-    assert result2["type"] == FlowResultType.ABORT
-    assert result2["reason"] == "reconfigure_successful"
-    assert entry.data == {
-        CONF_NAME: "New Name",
-        CONF_API_TOKEN: "original-token",
     }
 
 
@@ -212,8 +114,8 @@ async def test_reconfigure_form_update_token(hass: HomeAssistant) -> None:
     # Arrange
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title="My Tracker",
-        data={CONF_NAME: "My Tracker", CONF_API_TOKEN: "old-token"},
+        title="Energy Tracker",
+        data={CONF_API_TOKEN: "old-token"},
         unique_id="old-token",
     )
     entry.add_to_hass(hass)
@@ -233,7 +135,6 @@ async def test_reconfigure_form_update_token(hass: HomeAssistant) -> None:
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             {
-                CONF_NAME: "Updated Tracker",
                 CONF_API_TOKEN: "new-token-456",
             },
         )
@@ -242,44 +143,10 @@ async def test_reconfigure_form_update_token(hass: HomeAssistant) -> None:
     assert result2["type"] == FlowResultType.ABORT
     assert result2["reason"] == "reconfigure_successful"
     assert entry.data == {
-        CONF_NAME: "Updated Tracker",
         CONF_API_TOKEN: "new-token-456",
     }
     assert entry.unique_id == "new-token-456"
     mock_reload.assert_called_once_with(entry.entry_id)
-
-
-async def test_reconfigure_form_empty_name(hass: HomeAssistant) -> None:
-    """Test validation error when reconfigure name is empty."""
-    # Arrange
-    entry = MockConfigEntry(
-        domain=DOMAIN,
-        title="My Tracker",
-        data={CONF_NAME: "My Tracker", CONF_API_TOKEN: "test-token"},
-        unique_id="test-token",
-    )
-    entry.add_to_hass(hass)
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN,
-        context={
-            "source": "reconfigure",
-            "entry_id": entry.entry_id,
-        },
-    )
-
-    # Act
-    result2 = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {
-            CONF_NAME: "   ",
-        },
-    )
-
-    # Assert
-    assert result2["type"] == FlowResultType.FORM
-    assert result2["step_id"] == "reconfigure"
-    assert result2["errors"] == {"name": "empty_name"}
 
 
 async def test_reconfigure_form_empty_token(hass: HomeAssistant) -> None:
@@ -287,8 +154,8 @@ async def test_reconfigure_form_empty_token(hass: HomeAssistant) -> None:
     # Arrange
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title="My Tracker",
-        data={CONF_NAME: "My Tracker", CONF_API_TOKEN: "test-token"},
+        title="Energy Tracker",
+        data={CONF_API_TOKEN: "test-token"},
         unique_id="test-token",
     )
     entry.add_to_hass(hass)
@@ -305,7 +172,6 @@ async def test_reconfigure_form_empty_token(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
-            CONF_NAME: "My Tracker",
             CONF_API_TOKEN: "   ",
         },
     )
@@ -316,62 +182,21 @@ async def test_reconfigure_form_empty_token(hass: HomeAssistant) -> None:
     assert result2["errors"] == {"api_token": "empty_token"}
 
 
-async def test_reconfigure_form_duplicate_name(hass: HomeAssistant) -> None:
-    """Test validation error when reconfigure name conflicts with another entry."""
-    # Arrange
-    entry1 = MockConfigEntry(
-        domain=DOMAIN,
-        title="Entry One",
-        data={CONF_NAME: "Entry One", CONF_API_TOKEN: "token-1"},
-        unique_id="token-1",
-    )
-    entry1.add_to_hass(hass)
-
-    entry2 = MockConfigEntry(
-        domain=DOMAIN,
-        title="Entry Two",
-        data={CONF_NAME: "Entry Two", CONF_API_TOKEN: "token-2"},
-        unique_id="token-2",
-    )
-    entry2.add_to_hass(hass)
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN,
-        context={
-            "source": "reconfigure",
-            "entry_id": entry2.entry_id,
-        },
-    )
-
-    # Act
-    result2 = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {
-            CONF_NAME: "Entry One",
-        },
-    )
-
-    # Assert
-    assert result2["type"] == FlowResultType.FORM
-    assert result2["step_id"] == "reconfigure"
-    assert result2["errors"] == {"name": "name_already_exists"}
-
-
 async def test_reconfigure_form_duplicate_token(hass: HomeAssistant) -> None:
     """Test abort when reconfigure token conflicts with another entry."""
     # Arrange
     entry1 = MockConfigEntry(
         domain=DOMAIN,
-        title="Entry One",
-        data={CONF_NAME: "Entry One", CONF_API_TOKEN: "token-1"},
+        title="Energy Tracker",
+        data={CONF_API_TOKEN: "token-1"},
         unique_id="token-1",
     )
     entry1.add_to_hass(hass)
 
     entry2 = MockConfigEntry(
         domain=DOMAIN,
-        title="Entry Two",
-        data={CONF_NAME: "Entry Two", CONF_API_TOKEN: "token-2"},
+        title="Energy Tracker",
+        data={CONF_API_TOKEN: "token-2"},
         unique_id="token-2",
     )
     entry2.add_to_hass(hass)
@@ -388,7 +213,6 @@ async def test_reconfigure_form_duplicate_token(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
-            CONF_NAME: "Entry Two",
             CONF_API_TOKEN: "token-1",
         },
     )
@@ -419,8 +243,8 @@ async def test_reconfigure_form_input_trimming(hass: HomeAssistant) -> None:
     # Arrange
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title="Old Name",
-        data={CONF_NAME: "Old Name", CONF_API_TOKEN: "old-token"},
+        title="Energy Tracker",
+        data={CONF_API_TOKEN: "old-token"},
         unique_id="old-token",
     )
     entry.add_to_hass(hass)
@@ -438,7 +262,6 @@ async def test_reconfigure_form_input_trimming(hass: HomeAssistant) -> None:
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             {
-                CONF_NAME: "  New Name  ",
                 CONF_API_TOKEN: "  new-token  ",
             },
         )
@@ -447,6 +270,5 @@ async def test_reconfigure_form_input_trimming(hass: HomeAssistant) -> None:
     assert result2["type"] == FlowResultType.ABORT
     assert result2["reason"] == "reconfigure_successful"
     assert entry.data == {
-        CONF_NAME: "New Name",
         CONF_API_TOKEN: "new-token",
     }
