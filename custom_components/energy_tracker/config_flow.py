@@ -4,14 +4,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant import config_entries
-from homeassistant.data_entry_flow import FlowResult
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 import voluptuous as vol
 
 from .const import CONF_API_TOKEN, DOMAIN
 
 
-class EnergyTrackerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
+class EnergyTrackerConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
     """Config flow handler for the Energy Tracker integration.
 
     This class manages the configuration and reconfiguration steps for the integration.
@@ -23,7 +22,7 @@ class EnergyTrackerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type
     async def async_step_user(
         self,
         user_input: dict[str, Any] | None = None,
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the initial step."""
         errors: dict[str, str] = {}
 
@@ -57,7 +56,7 @@ class EnergyTrackerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type
     async def async_step_reconfigure(
         self,
         user_input: dict[str, Any] | None = None,
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle reconfiguration of the integration."""
         errors: dict[str, str] = {}
         entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])

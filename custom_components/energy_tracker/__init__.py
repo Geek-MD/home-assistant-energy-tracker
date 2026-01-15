@@ -10,6 +10,7 @@ from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant, ServiceCall, State
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 
 from .api import EnergyTrackerApi
@@ -27,9 +28,9 @@ SERVICE_SEND_METER_READING_SCHEMA = vol.Schema(
 )
 
 
-async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Energy Tracker integration (YAML-based, legacy)."""
-    LOGGER.debug("async_setup called for Energy Tracker (YAML not supported).")
+    LOGGER.debug("async_setup called for Energy Tracker (YAML not supported)")
     return True
 
 
