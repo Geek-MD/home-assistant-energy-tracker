@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "設定 Energy Tracker",
-        "description": "輸入您的個人存取令牌以連線至您的 Energy Tracker 帳戶。",
+        "description": "輸入您的帳戶資訊以連接到 Energy Tracker。",
         "data": {
+          "name": "帳戶名稱",
           "api_token": "個人存取令牌"
+        },
+        "data_description": {
+          "name": "此帳戶的可識別名稱（例如，'小明的帳戶'）。",
+          "api_token": "您在 Energy Tracker 應用程式中的個人存取權杖。"
         }
       },
       "reconfigure": {
         "title": "重新設定 Energy Tracker",
-        "description": "更新您的 Energy Tracker 帳戶令牌。輸入新的個人存取令牌，或將欄位留空以保留現有令牌。",
+        "description": "更新您的 Energy Tracker 帳戶設定。留空欄位以保留現有值。",
         "data": {
-          "api_token": "個人存取令牌（輸入新令牌，或留空以保留現有）"
+          "name": "帳戶名稱",
+          "api_token": "個人存取令牌"
+        },
+        "data_description": {
+          "name": "此帳戶的可識別名稱。",
+          "api_token": "輸入新權杖，或留空以保留現有權杖。"
         }
       }
     },

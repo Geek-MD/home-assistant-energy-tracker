@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Configura Energy Tracker",
-        "description": "Inserisci il tuo token di accesso personale per connetterti al tuo account Energy Tracker.",
+        "description": "Inserisci i dettagli del tuo account per connetterti a Energy Tracker.",
         "data": {
+          "name": "Nome account",
           "api_token": "Token di accesso personale"
+        },
+        "data_description": {
+          "name": "Un nome riconoscibile per questo account (es., 'Account di Giovanni').",
+          "api_token": "Il tuo token di accesso personale dall'app Energy Tracker."
         }
       },
       "reconfigure": {
         "title": "Riconfigura Energy Tracker",
-        "description": "Aggiorna il token del tuo account Energy Tracker. Inserisci un nuovo token di accesso personale o lascia il campo vuoto per mantenere il token esistente.",
+        "description": "Aggiorna le impostazioni del tuo account Energy Tracker. Lascia i campi vuoti per mantenere i valori esistenti.",
         "data": {
-          "api_token": "Token di accesso personale (inserisci nuovo o lascia vuoto per mantenere l'esistente)"
+          "name": "Nome account",
+          "api_token": "Token di accesso personale"
+        },
+        "data_description": {
+          "name": "Un nome riconoscibile per questo account.",
+          "api_token": "Inserisci un nuovo token o lascia vuoto per mantenere quello esistente."
         }
       }
     },

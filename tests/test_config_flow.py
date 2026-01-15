@@ -5,6 +5,7 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from homeassistant import config_entries
+from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
 import pytest
@@ -26,13 +27,14 @@ async def test_user_form_create_entry(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
+            CONF_NAME: "John's Account",
             CONF_API_TOKEN: "test-token-123",
         },
     )
 
     # Assert
     assert result2["type"] == FlowResultType.CREATE_ENTRY
-    assert result2["title"] == "Energy Tracker (...-123)"
+    assert result2["title"] == "John's Account"
     assert result2["data"] == {
         CONF_API_TOKEN: "test-token-123",
     }
@@ -50,6 +52,7 @@ async def test_user_form_empty_token(hass: HomeAssistant) -> None:
         await hass.config_entries.flow.async_configure(
             result["flow_id"],
             {
+                CONF_NAME: "Test Account",
                 CONF_API_TOKEN: "   ",
             },
         )
@@ -76,6 +79,7 @@ async def test_user_form_duplicate_token(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
+            CONF_NAME: "Test Account",
             CONF_API_TOKEN: "duplicate-token",
         },
     )
@@ -96,12 +100,14 @@ async def test_user_form_input_trimming(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
+            CONF_NAME: "  My Account  ",
             CONF_API_TOKEN: "  test-token-123  ",
         },
     )
 
     # Assert
     assert result2["type"] == FlowResultType.CREATE_ENTRY
+    assert result2["title"] == "My Account"
     assert result2["data"] == {
         CONF_API_TOKEN: "test-token-123",
     }
@@ -133,6 +139,7 @@ async def test_reconfigure_form_update_token(hass: HomeAssistant) -> None:
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             {
+                CONF_NAME: "Updated Account",
                 CONF_API_TOKEN: "new-token-456",
             },
         )
@@ -143,6 +150,7 @@ async def test_reconfigure_form_update_token(hass: HomeAssistant) -> None:
     assert entry.data == {
         CONF_API_TOKEN: "new-token-456",
     }
+    assert entry.title == "Updated Account"
     assert entry.unique_id == "new-token-456"
     mock_reload.assert_called_once_with(entry.entry_id)
 
@@ -171,6 +179,7 @@ async def test_reconfigure_form_empty_token(hass: HomeAssistant) -> None:
         await hass.config_entries.flow.async_configure(
             result["flow_id"],
             {
+                CONF_NAME: "My Account",
                 CONF_API_TOKEN: "   ",
             },
         )
@@ -209,6 +218,7 @@ async def test_reconfigure_form_duplicate_token(hass: HomeAssistant) -> None:
     result2 = await hass.config_entries.flow.async_configure(
         result["flow_id"],
         {
+            CONF_NAME: "Conflicting Account",
             CONF_API_TOKEN: "token-1",
         },
     )
@@ -242,6 +252,7 @@ async def test_reconfigure_form_input_trimming(hass: HomeAssistant) -> None:
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             {
+                CONF_NAME: "  Trimmed Account  ",
                 CONF_API_TOKEN: "  new-token  ",
             },
         )
@@ -252,3 +263,4 @@ async def test_reconfigure_form_input_trimming(hass: HomeAssistant) -> None:
     assert entry.data == {
         CONF_API_TOKEN: "new-token",
     }
+    assert entry.title == "Trimmed Account"

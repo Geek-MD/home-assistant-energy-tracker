@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Konfigurera Energy Tracker",
-        "description": "Ange din personliga åtkomsttoken för att ansluta till ditt Energy Tracker-konto.",
+        "description": "Ange dina kontouppgifter för att ansluta till Energy Tracker.",
         "data": {
+          "name": "Kontonamn",
           "api_token": "Personlig åtkomsttoken"
+        },
+        "data_description": {
+          "name": "Ett igenkännligt namn för detta konto (t.ex. 'Johans konto').",
+          "api_token": "Din personliga åtkomsttoken från Energy Tracker-appen."
         }
       },
       "reconfigure": {
         "title": "Omkonfigurera Energy Tracker",
-        "description": "Uppdatera din Energy Tracker-kontotoken. Ange en ny personlig åtkomsttoken eller lämna fältet tomt för att behålla den befintliga token.",
+        "description": "Uppdatera dina Energy Tracker-kontoinställningar. Lämna fält tomma för att behålla befintliga värden.",
         "data": {
-          "api_token": "Personlig åtkomsttoken (ange ny, eller lämna tom för att behålla befintlig)"
+          "name": "Kontonamn",
+          "api_token": "Personlig åtkomsttoken"
+        },
+        "data_description": {
+          "name": "Ett igenkännligt namn för detta konto.",
+          "api_token": "Ange en ny token eller lämna tomt för att behålla befintlig."
         }
       }
     },

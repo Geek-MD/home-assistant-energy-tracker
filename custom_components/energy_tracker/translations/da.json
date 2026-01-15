@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Opsæt Energy Tracker",
-        "description": "Indtast dit personlige adgangstoken for at oprette forbindelse til din Energy Tracker-konto.",
+        "description": "Indtast dine kontooplysninger for at oprette forbindelse til Energy Tracker.",
         "data": {
+          "name": "Kontonavn",
           "api_token": "Personligt adgangstoken"
+        },
+        "data_description": {
+          "name": "Et genkendeligt navn for denne konto (f.eks. 'Johns konto').",
+          "api_token": "Dit personlige adgangstoken fra Energy Tracker-appen."
         }
       },
       "reconfigure": {
         "title": "Omkonfigurer Energy Tracker",
-        "description": "Opdater dit Energy Tracker-kontotoken. Indtast et nyt personligt adgangstoken, eller lad feltet stå tomt for at beholde det eksisterende token.",
+        "description": "Opdater dine Energy Tracker-kontoindstillinger. Lad felter være tomme for at beholde eksisterende værdier.",
         "data": {
-          "api_token": "Personligt adgangstoken (indtast nyt, eller lad være tom for at beholde eksisterende)"
+          "name": "Kontonavn",
+          "api_token": "Personligt adgangstoken"
+        },
+        "data_description": {
+          "name": "Et genkendeligt navn for denne konto.",
+          "api_token": "Indtast et nyt token, eller lad være tomt for at beholde eksisterende."
         }
       }
     },

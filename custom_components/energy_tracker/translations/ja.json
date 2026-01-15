@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Energy Tracker をセットアップ",
-        "description": "Energy Tracker アカウントに接続するために個人アクセストークンを入力してください。",
+        "description": "Energy Trackerに接続するためのアカウント情報を入力してください。",
         "data": {
+          "name": "アカウント名",
           "api_token": "個人アクセストークン"
+        },
+        "data_description": {
+          "name": "このアカウントの認識しやすい名前（例：「太郎のアカウント」）。",
+          "api_token": "Energy Trackerアプリからの個人アクセストークン。"
         }
       },
       "reconfigure": {
         "title": "Energy Tracker を再設定",
-        "description": "Energy Tracker アカウントトークンを更新します。新しい個人用アクセストークンを入力するか、既存のトークンを保持する場合はフィールドを空のままにしてください。",
+        "description": "Energy Trackerアカウントの設定を更新します。既存の値を保持するにはフィールドを空白のままにしてください。",
         "data": {
-          "api_token": "個人用アクセストークン（新規入力、または既存を保持する場合は空のまま）"
+          "name": "アカウント名",
+          "api_token": "個人アクセストークン"
+        },
+        "data_description": {
+          "name": "このアカウントの認識しやすい名前。",
+          "api_token": "新しいトークンを入力するか、既存のものを保持するには空白のままにしてください。"
         }
       }
     },

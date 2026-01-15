@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Energy Tracker'ı Kur",
-        "description": "Energy Tracker hesabınıza bağlanmak için kişisel erişim belirtecinizi girin.",
+        "description": "Energy Tracker'a bağlanmak için hesap bilgilerinizi girin.",
         "data": {
+          "name": "Hesap adı",
           "api_token": "Kişisel erişim belirteci"
+        },
+        "data_description": {
+          "name": "Bu hesap için tanınabilir bir ad (örn., 'Ahmet'in Hesabı').",
+          "api_token": "Energy Tracker uygulamasından kişisel erişim tokeniniz."
         }
       },
       "reconfigure": {
         "title": "Energy Tracker'ı Yeniden Yapılandır",
-        "description": "Energy Tracker hesap belirtecinizi güncelleyin. Yeni bir kişisel erişim belirteci girin veya mevcut belirteci korumak için alanı boş bırakın.",
+        "description": "Energy Tracker hesap ayarlarınızı güncelleyin. Mevcut değerleri korumak için alanları boş bırakın.",
         "data": {
-          "api_token": "Kişisel erişim belirteci (yeni girin veya mevcut olanı korumak için boş bırakın)"
+          "name": "Hesap adı",
+          "api_token": "Kişisel erişim belirteci"
+        },
+        "data_description": {
+          "name": "Bu hesap için tanınabilir bir ad.",
+          "api_token": "Yeni bir token girin veya mevcut olanı korumak için boş bırakın."
         }
       }
     },

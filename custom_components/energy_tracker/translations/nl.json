@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Energy Tracker instellen",
-        "description": "Voer uw persoonlijke toegangstoken in om verbinding te maken met uw Energy Tracker-account.",
+        "description": "Voer uw accountgegevens in om verbinding te maken met Energy Tracker.",
         "data": {
+          "name": "Accountnaam",
           "api_token": "Persoonlijk toegangstoken"
+        },
+        "data_description": {
+          "name": "Een herkenbare naam voor dit account (bijv. 'Jans account').",
+          "api_token": "Uw persoonlijke toegangstoken van de Energy Tracker-app."
         }
       },
       "reconfigure": {
         "title": "Energy Tracker opnieuw configureren",
-        "description": "Werk uw Energy Tracker-accounttoken bij. Voer een nieuw persoonlijk toegangstoken in of laat het veld leeg om het bestaande token te behouden.",
+        "description": "Werk uw Energy Tracker-accountinstellingen bij. Laat velden leeg om bestaande waarden te behouden.",
         "data": {
-          "api_token": "Persoonlijk toegangstoken (voer nieuw in, of leeg laten om bestaande te behouden)"
+          "name": "Accountnaam",
+          "api_token": "Persoonlijk toegangstoken"
+        },
+        "data_description": {
+          "name": "Een herkenbare naam voor dit account.",
+          "api_token": "Voer een nieuw token in of laat leeg om het bestaande te behouden."
         }
       }
     },

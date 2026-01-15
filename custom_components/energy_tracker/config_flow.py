@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from homeassistant import config_entries
+from homeassistant.const import CONF_NAME
 from homeassistant.data_entry_flow import FlowResult
 import voluptuous as vol
 
@@ -12,12 +13,14 @@ from .const import CONF_API_TOKEN, DOMAIN
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
+        vol.Required(CONF_NAME): vol.All(str, vol.Strip, vol.Length(min=1)),
         vol.Required(CONF_API_TOKEN): vol.All(str, vol.Strip, vol.Length(min=1)),
     }
 )
 
 STEP_RECONFIGURE_DATA_SCHEMA = vol.Schema(
     {
+        vol.Optional(CONF_NAME): vol.All(str, vol.Strip, vol.Length(min=1)),
         vol.Optional(CONF_API_TOKEN): vol.All(str, vol.Strip, vol.Length(min=1)),
     }
 )
@@ -38,13 +41,14 @@ class EnergyTrackerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type
     ) -> FlowResult:
         """Handle the initial step."""
         if user_input is not None:
+            name = user_input[CONF_NAME].strip()
             token = user_input[CONF_API_TOKEN].strip()
 
             await self.async_set_unique_id(token)
             self._abort_if_unique_id_configured()
 
             return self.async_create_entry(
-                title=f"Energy Tracker (...{token[-4:]})",
+                title=name,
                 data={CONF_API_TOKEN: token},
             )
 
@@ -61,6 +65,9 @@ class EnergyTrackerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type
         entry = self._get_reconfigure_entry()
 
         if user_input is not None:
+            new_name_input = user_input.get(CONF_NAME)
+            new_name = new_name_input.strip() if new_name_input else entry.title
+
             new_token_input = user_input.get(CONF_API_TOKEN)
             new_token = (
                 new_token_input.strip()
@@ -75,6 +82,7 @@ class EnergyTrackerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type
 
             return self.async_update_reload_and_abort(
                 entry,
+                title=new_name,
                 data={CONF_API_TOKEN: new_token},
                 reason="reconfigure_successful",
             )

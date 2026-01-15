@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Energy Tracker beállítása",
-        "description": "Adja meg a személyes hozzáférési tokenjét az Energy Tracker fiókjához való csatlakozáshoz.",
+        "description": "Adja meg fiókadatait az Energy Tracker-hez való csatlakozáshoz.",
         "data": {
+          "name": "Fióknév",
           "api_token": "Személyes hozzáférési token"
+        },
+        "data_description": {
+          "name": "Egy felismerhető név ehhez a fiókhoz (pl. 'János fiókja').",
+          "api_token": "Személyes hozzáférési tokenje az Energy Tracker alkalmazásból."
         }
       },
       "reconfigure": {
         "title": "Energy Tracker újrakonfigurálása",
-        "description": "Frissítse az Energy Tracker fiókja tokenjét. Adjon meg egy új személyes hozzáférési tokent, vagy hagyja a mezőt üresen a meglévő token megtartásához.",
+        "description": "Frissítse Energy Tracker fiókbeállításait. Hagyja üresen a mezőket a meglévő értékek megtartásához.",
         "data": {
-          "api_token": "Személyes hozzáférési token (adjon meg újat, vagy hagyja üresen a meglévő megtartásához)"
+          "name": "Fióknév",
+          "api_token": "Személyes hozzáférési token"
+        },
+        "data_description": {
+          "name": "Egy felismerhető név ehhez a fiókhoz.",
+          "api_token": "Adjon meg új tokent, vagy hagyja üresen a meglévő megtartásához."
         }
       }
     },

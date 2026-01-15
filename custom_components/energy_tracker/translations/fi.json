@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Määritä Energy Tracker",
-        "description": "Syötä henkilökohtainen käyttöoikeustunnuksesi yhdistääksesi Energy Tracker -tilillesi.",
+        "description": "Syötä tilisi tiedot yhdistääksesi Energy Trackeriin.",
         "data": {
+          "name": "Tilin nimi",
           "api_token": "Henkilökohtainen käyttöoikeustunnus"
+        },
+        "data_description": {
+          "name": "Tunnistettava nimi tälle tilille (esim. 'Johanneksen tili').",
+          "api_token": "Henkilökohtainen käyttöoikeustunnuksesi Energy Tracker -sovelluksesta."
         }
       },
       "reconfigure": {
         "title": "Määritä Energy Tracker uudelleen",
-        "description": "Päivitä Energy Tracker -tilisi tunnus. Syötä uusi henkilökohtainen käyttöoikeustunnus tai jätä kenttä tyhjäksi säilyttääksesi nykyisen tunnuksen.",
+        "description": "Päivitä Energy Tracker -tilisi asetukset. Jätä kentät tyhjiksi säilyttääksesi nykyiset arvot.",
         "data": {
-          "api_token": "Henkilökohtainen käyttöoikeustunnus (syötä uusi tai jätä tyhjäksi säilyttääksesi nykyisen)"
+          "name": "Tilin nimi",
+          "api_token": "Henkilökohtainen käyttöoikeustunnus"
+        },
+        "data_description": {
+          "name": "Tunnistettava nimi tälle tilille.",
+          "api_token": "Syötä uusi tunnus tai jätä tyhjäksi säilyttääksesi nykyisen."
         }
       }
     },

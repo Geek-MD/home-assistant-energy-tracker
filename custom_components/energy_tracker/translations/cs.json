@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Nastavit Energy Tracker",
-        "description": "Zadejte svůj osobní přístupový token pro připojení ke svému účtu Energy Tracker.",
+        "description": "Zadejte údaje svého účtu pro připojení k Energy Tracker.",
         "data": {
+          "name": "Název účtu",
           "api_token": "Osobní přístupový token"
+        },
+        "data_description": {
+          "name": "Rozpoznatelný název pro tento účet (např. 'Janův účet').",
+          "api_token": "Váš osobní přístupový token z aplikace Energy Tracker."
         }
       },
       "reconfigure": {
         "title": "Překonfigurovat Energy Tracker",
-        "description": "Aktualizujte token svého účtu Energy Tracker. Zadejte nový osobní přístupový token, nebo ponechte pole prázdné pro zachování stávajícího tokenu.",
+        "description": "Aktualizujte nastavení účtu Energy Tracker. Ponechte pole prázdná pro zachování stávajících hodnot.",
         "data": {
-          "api_token": "Osobní přístupový token (zadejte nový, nebo ponechte prázdné pro zachování stávajícího)"
+          "name": "Název účtu",
+          "api_token": "Osobní přístupový token"
+        },
+        "data_description": {
+          "name": "Rozpoznatelný název pro tento účet.",
+          "api_token": "Zadejte nový token, nebo ponechte prázdné pro zachování stávajícího."
         }
       }
     },

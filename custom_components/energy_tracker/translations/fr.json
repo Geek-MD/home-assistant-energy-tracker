@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Configurer Energy Tracker",
-        "description": "Entrez votre jeton d'accès personnel pour vous connecter à votre compte Energy Tracker.",
+        "description": "Entrez les détails de votre compte pour vous connecter à Energy Tracker.",
         "data": {
+          "name": "Nom du compte",
           "api_token": "Jeton d'accès personnel"
+        },
+        "data_description": {
+          "name": "Un nom reconnaissable pour ce compte (par ex., 'Compte de Jean').",
+          "api_token": "Votre jeton d'accès personnel de l'application Energy Tracker."
         }
       },
       "reconfigure": {
         "title": "Reconfigurer Energy Tracker",
-        "description": "Mettez à jour le jeton de votre compte Energy Tracker. Entrez un nouveau jeton d'accès personnel ou laissez le champ vide pour conserver le jeton existant.",
+        "description": "Mettez à jour les paramètres de votre compte Energy Tracker. Laissez les champs vides pour conserver les valeurs existantes.",
         "data": {
-          "api_token": "Jeton d'accès personnel (entrer nouveau ou laisser vide pour conserver l'existant)"
+          "name": "Nom du compte",
+          "api_token": "Jeton d'accès personnel"
+        },
+        "data_description": {
+          "name": "Un nom reconnaissable pour ce compte.",
+          "api_token": "Entrez un nouveau jeton ou laissez vide pour conserver l'existant."
         }
       }
     },

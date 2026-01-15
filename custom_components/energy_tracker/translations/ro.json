@@ -3,16 +3,26 @@
     "step": {
       "user": {
         "title": "Configurați Energy Tracker",
-        "description": "Introduceți token-ul dvs. de acces personal pentru a vă conecta la contul Energy Tracker.",
+        "description": "Introduceți detaliile contului pentru a vă conecta la Energy Tracker.",
         "data": {
+          "name": "Nume cont",
           "api_token": "Token de acces personal"
+        },
+        "data_description": {
+          "name": "Un nume recognoscibil pentru acest cont (de ex., 'Contul lui Ion').",
+          "api_token": "Tokenul dvs. personal de acces din aplicația Energy Tracker."
         }
       },
       "reconfigure": {
         "title": "Reconfigurați Energy Tracker",
-        "description": "Actualizați token-ul contului dvs. Energy Tracker. Introduceți un nou token de acces personal sau lăsați câmpul gol pentru a păstra token-ul existent.",
+        "description": "Actualizați setările contului Energy Tracker. Lăsați câmpurile goale pentru a păstra valorile existente.",
         "data": {
-          "api_token": "Token de acces personal (introduceți nou sau lăsați gol pentru a păstra cel existent)"
+          "name": "Nume cont",
+          "api_token": "Token de acces personal"
+        },
+        "data_description": {
+          "name": "Un nume recognoscibil pentru acest cont.",
+          "api_token": "Introduceți un nou token sau lăsați gol pentru a păstra cel existent."
         }
       }
     },
