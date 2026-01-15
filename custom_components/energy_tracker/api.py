@@ -7,6 +7,7 @@ import logging
 
 from energy_tracker_api import (
     AuthenticationError,
+    ConflictError,
     CreateMeterReadingDto,
     EnergyTrackerAPIError,
     EnergyTrackerClient,
@@ -127,6 +128,16 @@ class EnergyTrackerApi:
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="device_not_found",
+            ) from err
+
+        except ConflictError as err:
+            # HTTP 409 - Conflict
+            LOGGER.warning("%s %s", log_prefix, err)
+            msg = "; ".join(err.api_message) if err.api_message else str(err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="conflict",
+                translation_placeholders={"error": msg},
             ) from err
 
         except RateLimitError as err:

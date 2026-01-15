@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import inspect
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -30,16 +29,8 @@ def create_service_call(
     service: str,
     data: dict,
 ) -> ServiceCall:
-    """Create ServiceCall compatible with different HA versions."""
-    # Check if ServiceCall accepts hass as first positional arg (newer versions)
-    sig = inspect.signature(ServiceCall.__init__)
-    params = list(sig.parameters.keys())
-
-    # If 'hass' is the second parameter (after 'self'), use positional
-    if len(params) > 1 and params[1] == "hass":
-        return ServiceCall(hass, domain, service, data=data)
-    # Older version expects domain as first arg
-    return ServiceCall(domain=domain, service=service, data=data)
+    """Create a ServiceCall instance for testing."""
+    return ServiceCall(hass, domain, service, data=data)
 
 
 class TestAsyncSetup:
@@ -60,8 +51,8 @@ class TestAsyncSetup:
 class TestAsyncSetupEntry:
     """Test async_setup_entry function."""
 
-    async def test_setup_entry_stores_token_in_hass_data(self, hass: HomeAssistant):
-        """Test that setup_entry stores API token in hass.data."""
+    async def test_setup_entry_stores_token_in_runtime_data(self, hass: HomeAssistant):
+        """Test that setup_entry stores API token in runtime_data."""
         # Arrange
         entry = MockConfigEntry(
             domain=DOMAIN,
@@ -79,9 +70,7 @@ class TestAsyncSetupEntry:
 
         # Assert
         assert result is True
-        assert DOMAIN in hass.data
-        assert entry.entry_id in hass.data[DOMAIN]
-        assert hass.data[DOMAIN][entry.entry_id][CONF_API_TOKEN] == "test-token-123"
+        assert entry.runtime_data == "test-token-123"
 
     async def test_setup_entry_registers_service_once(self, hass: HomeAssistant):
         """Test that service is registered only once for multiple entries."""
@@ -115,8 +104,8 @@ class TestAsyncSetupEntry:
 class TestAsyncUnloadEntry:
     """Test async_unload_entry function."""
 
-    async def test_unload_entry_removes_data(self, hass: HomeAssistant):
-        """Test that unload_entry removes entry data."""
+    async def test_unload_entry_returns_true(self, hass: HomeAssistant):
+        """Test that unload_entry returns True."""
         # Arrange
         entry = MockConfigEntry(
             domain=DOMAIN,
@@ -132,7 +121,6 @@ class TestAsyncUnloadEntry:
 
         # Assert
         assert result is True
-        assert entry.entry_id not in hass.data.get(DOMAIN, {})
 
     async def test_unload_last_entry_removes_service(self, hass: HomeAssistant):
         """Test that unloading last entry removes service."""
@@ -152,7 +140,6 @@ class TestAsyncUnloadEntry:
 
         # Assert
         assert not hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
-        assert DOMAIN not in hass.data
 
     async def test_unload_one_of_multiple_entries_keeps_service(
         self, hass: HomeAssistant
@@ -183,9 +170,8 @@ class TestAsyncUnloadEntry:
 
         # Assert
         assert hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
-        assert DOMAIN in hass.data
-        assert entry2.entry_id in hass.data[DOMAIN]
-        assert entry1.entry_id not in hass.data[DOMAIN]
+        # entry2 still has its runtime_data
+        assert entry2.runtime_data == "token-2"
 
 
 class TestAsyncHandleSendMeterReading:

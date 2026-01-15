@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Reconfigure Energy Tracker",
-        "description": "Update your Energy Tracker account token. Leave the token field empty to keep the existing token.",
+        "description": "Update your Energy Tracker account token. Enter a new personal access token, or leave the field blank to keep the existing token.",
         "data": {
-          "api_token": "Personal access token (leave empty to keep existing)"
+          "api_token": "Personal access token (enter new token, or leave blank to keep existing)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "No personal access token configured. Check account settings."
+    },
+    "conflict": {
+      "message": "A reading for this timestamp already exists. ({error})"
     }
   },
   "services": {

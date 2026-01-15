@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Määritä Energy Tracker uudelleen",
-        "description": "Päivitä Energy Tracker -tilisi tunnus. Jätä tunnuskenttä tyhjäksi säilyttääksesi nykyisen tunnuksen.",
+        "description": "Päivitä Energy Tracker -tilisi tunnus. Syötä uusi henkilökohtainen käyttöoikeustunnus tai jätä kenttä tyhjäksi säilyttääksesi nykyisen tunnuksen.",
         "data": {
-          "api_token": "Henkilökohtainen käyttöoikeustunnus (jätä tyhjäksi säilyttääksesi nykyisen)"
+          "api_token": "Henkilökohtainen käyttöoikeustunnus (syötä uusi tai jätä tyhjäksi säilyttääksesi nykyisen)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Henkilökohtaista käyttöoikeustunnusta ei ole määritetty. Tarkista tiliasetukset."
+    },
+    "conflict": {
+      "message": "Lukema tälle aikaleimalle on jo olemassa. ({error})"
     }
   },
   "services": {

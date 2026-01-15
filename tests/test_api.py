@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from energy_tracker_api import (
     AuthenticationError,
+    ConflictError,
     EnergyTrackerAPIError,
     ForbiddenError,
     NetworkError,
@@ -24,23 +25,23 @@ from custom_components.energy_tracker.api import EnergyTrackerApi
 class TestEnergyTrackerApiInit:
     """Test EnergyTrackerApi initialization."""
 
-    def test_init_stores_hass_and_token(self, mock_hass, api_token):
+    def test_init_stores_hass_and_token(self, hass, api_token):
         """Test that __init__ stores hass and token."""
         # Arrange & Act
         with patch("custom_components.energy_tracker.api.EnergyTrackerClient"):
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
         # Assert
-        assert api._hass == mock_hass
+        assert api._hass == hass
         assert api._token == api_token
 
-    def test_init_creates_client(self, mock_hass, api_token):
+    def test_init_creates_client(self, hass, api_token):
         """Test that __init__ creates EnergyTrackerClient."""
         # Arrange & Act
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
         ) as mock_client:
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Assert
             mock_client.assert_called_once_with(access_token=api_token)
@@ -52,7 +53,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_success(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test successful meter reading submission."""
         # Arrange
@@ -65,7 +66,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock()
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act
             await api.send_meter_reading(
@@ -86,7 +87,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_without_rounding(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading submission without rounding."""
         # Arrange
@@ -99,7 +100,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock()
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act
             await api.send_meter_reading(
@@ -116,7 +117,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_validation_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with validation error (HTTP 400)."""
         # Arrange
@@ -132,7 +133,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -151,7 +152,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_authentication_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with authentication error (HTTP 401)."""
         # Arrange
@@ -165,7 +166,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -188,7 +189,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_forbidden_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with forbidden error (HTTP 403)."""
         # Arrange
@@ -202,7 +203,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -225,7 +226,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_not_found_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with not found error (HTTP 404)."""
         # Arrange
@@ -239,7 +240,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -253,8 +254,42 @@ class TestSendMeterReading:
             assert exc_info.value.translation_key == "device_not_found"
 
     @pytest.mark.asyncio
+    async def test_send_meter_reading_conflict_error(
+        self, hass, api_token, device_id, mock_issue_registry
+    ):
+        """Test meter reading with conflict error (HTTP 409)."""
+        # Arrange
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
+
+        with patch(
+            "custom_components.energy_tracker.api.EnergyTrackerClient"
+        ) as mock_client_class:
+            mock_client = MagicMock()
+            error = ConflictError("Duplicate reading")
+            error.api_message = ["Reading already exists"]
+            mock_client.meter_readings.create = AsyncMock(side_effect=error)
+            mock_client_class.return_value = mock_client
+
+            api = EnergyTrackerApi(hass=hass, token=api_token)
+
+            # Act & Assert
+            with pytest.raises(HomeAssistantError) as exc_info:
+                await api.send_meter_reading(
+                    source_entity_id="sensor.power_meter",
+                    device_id=device_id,
+                    value=1234.5,
+                    timestamp=timestamp,
+                )
+
+            assert exc_info.value.translation_key == "conflict"
+            assert (
+                "Reading already exists"
+                in exc_info.value.translation_placeholders["error"]
+            )
+
+    @pytest.mark.asyncio
     async def test_send_meter_reading_rate_limit_with_retry(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with rate limit error including retry_after."""
         # Arrange
@@ -268,7 +303,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -284,7 +319,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_rate_limit_without_retry(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with rate limit error without retry_after."""
         # Arrange
@@ -298,7 +333,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -313,7 +348,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_timeout_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with timeout error."""
         # Arrange
@@ -327,7 +362,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -342,7 +377,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_network_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with network error."""
         # Arrange
@@ -356,7 +391,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -371,7 +406,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_server_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with server error (5xx)."""
         # Arrange
@@ -387,7 +422,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:
@@ -406,7 +441,7 @@ class TestSendMeterReading:
 
     @pytest.mark.asyncio
     async def test_send_meter_reading_unexpected_error(
-        self, mock_hass, api_token, device_id, mock_issue_registry
+        self, hass, api_token, device_id, mock_issue_registry
     ):
         """Test meter reading with unexpected error."""
         # Arrange
@@ -420,7 +455,7 @@ class TestSendMeterReading:
             mock_client.meter_readings.create = AsyncMock(side_effect=error)
             mock_client_class.return_value = mock_client
 
-            api = EnergyTrackerApi(hass=mock_hass, token=api_token)
+            api = EnergyTrackerApi(hass=hass, token=api_token)
 
             # Act & Assert
             with pytest.raises(HomeAssistantError) as exc_info:

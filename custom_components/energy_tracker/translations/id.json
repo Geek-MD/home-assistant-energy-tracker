@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Konfigurasi Ulang Energy Tracker",
-        "description": "Perbarui token akun Energy Tracker Anda. Biarkan bidang token kosong untuk mempertahankan token yang ada.",
+        "description": "Perbarui token akun Energy Tracker Anda. Masukkan token akses pribadi baru, atau biarkan bidang kosong untuk mempertahankan token yang ada.",
         "data": {
-          "api_token": "Token akses pribadi (biarkan kosong untuk mempertahankan yang ada)"
+          "api_token": "Token akses pribadi (masukkan baru, atau biarkan kosong untuk mempertahankan yang ada)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Tidak ada token akses pribadi yang dikonfigurasi. Periksa pengaturan akun."
+    },
+    "conflict": {
+      "message": "Pembacaan untuk stempel waktu ini sudah ada. ({error})"
     }
   },
   "services": {

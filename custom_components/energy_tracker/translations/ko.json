@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Energy Tracker 재구성",
-        "description": "Energy Tracker 계정 토큰을 업데이트합니다. 기존 토큰을 유지하려면 토큰 필드를 비워 두세요.",
+        "description": "Energy Tracker 계정 토큰을 업데이트합니다. 새 개인 액세스 토큰을 입력하거나 기존 토큰을 유지하려면 필드를 비워 두세요.",
         "data": {
-          "api_token": "개인 액세스 토큰(기존 토큰을 유지하려면 비워 둠)"
+          "api_token": "개인 액세스 토큰 (새로 입력하거나 기존 유지하려면 비워두기)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "개인 액세스 토큰이 구성되지 않았습니다. 계정 설정을 확인하십시오."
+    },
+    "conflict": {
+      "message": "이 타임스탬프의 판독값이 이미 존재합니다. ({error})"
     }
   },
   "services": {

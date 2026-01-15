@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Reconfigurar Energy Tracker",
-        "description": "Actualice el token de su cuenta de Energy Tracker. Deje el campo del token vacío para mantener el token existente.",
+        "description": "Actualice el token de su cuenta de Energy Tracker. Introduzca un nuevo token de acceso personal o deje el campo vacío para mantener el token existente.",
         "data": {
-          "api_token": "Token de acceso personal (dejar vacío para mantener el existente)"
+          "api_token": "Token de acceso personal (introduzca nuevo o deje vacío para mantener el existente)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "No hay token de acceso personal configurado. Verifica la configuración de la cuenta."
+    },
+    "conflict": {
+      "message": "Ya existe una lectura para esta marca de tiempo. ({error})"
     }
   },
   "services": {

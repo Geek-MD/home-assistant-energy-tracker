@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Przekonfiguruj Energy Tracker",
-        "description": "Zaktualizuj token konta Energy Tracker. Pozostaw pole tokenu puste, aby zachować istniejący token.",
+        "description": "Zaktualizuj token konta Energy Tracker. Wprowadź nowy osobisty token dostępu lub pozostaw pole puste, aby zachować istniejący token.",
         "data": {
-          "api_token": "Osobisty token dostępu (pozostaw puste, aby zachować istniejący)"
+          "api_token": "Osobisty token dostępu (wprowadź nowy lub pozostaw puste, aby zachować istniejący)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Nie skonfigurowano osobistego tokena dostępu. Sprawdź ustawienia konta."
+    },
+    "conflict": {
+      "message": "Odczyt dla tego znacznika czasu już istnieje. ({error})"
     }
   },
   "services": {

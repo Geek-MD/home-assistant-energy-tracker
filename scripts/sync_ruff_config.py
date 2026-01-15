@@ -4,6 +4,8 @@
 This script fetches the ruff configuration from Home Assistant Core's pyproject.toml,
 transforms paths for custom_components structure, applies local overrides,
 and generates a ruff.generated.toml file.
+
+It also syncs the Python version requirement.
 """
 
 import re
@@ -40,6 +42,17 @@ def fetch_core_config() -> str:
     print(f"Fetching {CORE_PYPROJECT_URL}...")
     with urllib.request.urlopen(CORE_PYPROJECT_URL) as response:
         return response.read().decode("utf-8")
+
+
+def extract_python_version(content: str) -> str | None:
+    """Extract minimum Python version from requires-python.
+
+    Example: 'requires-python = ">=3.13.2"' -> '3.13'
+    """
+    match = re.search(r'requires-python\s*=\s*">=(\d+\.\d+)', content)
+    if match:
+        return match.group(1)
+    return None
 
 
 def extract_ruff_sections(content: str) -> dict[str, list[str]]:
@@ -156,10 +169,50 @@ def add_local_overrides(content: str) -> str:
     return "\n".join(lines)
 
 
+def update_python_version_in_files(python_version: str) -> None:
+    """Update Python version in ruff.base.toml and pyproject.toml."""
+    project_root = Path(__file__).parent.parent
+    py_version = f"py{python_version.replace('.', '')}"  # 3.13 -> py313
+
+    # Update ruff.base.toml
+    ruff_base_path = project_root / "ruff.base.toml"
+    if ruff_base_path.exists():
+        content = ruff_base_path.read_text()
+        new_content = re.sub(
+            r'target-version\s*=\s*"py\d+"',
+            f'target-version = "{py_version}"',
+            content,
+        )
+        if new_content != content:
+            ruff_base_path.write_text(new_content)
+            print(f'Updated ruff.base.toml: target-version = "{py_version}"')
+
+    # Update pyproject.toml
+    pyproject_path = project_root / "pyproject.toml"
+    if pyproject_path.exists():
+        content = pyproject_path.read_text()
+        new_content = re.sub(
+            r'python_version\s*=\s*"\d+\.\d+"',
+            f'python_version = "{python_version}"',
+            content,
+        )
+        if new_content != content:
+            pyproject_path.write_text(new_content)
+            print(f'Updated pyproject.toml: python_version = "{python_version}"')
+
+
 def main() -> None:
     """Main entry point."""
     # Fetch core config
     core_content = fetch_core_config()
+
+    # Extract Python version
+    python_version = extract_python_version(core_content)
+    if python_version:
+        print(f"Found Python version requirement: >= {python_version}")
+        update_python_version_in_files(python_version)
+    else:
+        print("Warning: Could not extract Python version from Core")
 
     # Extract ruff sections
     sections = extract_ruff_sections(core_content)

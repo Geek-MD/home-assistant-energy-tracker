@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Energy Tracker'ı Yeniden Yapılandır",
-        "description": "Energy Tracker hesap belirtecinizi güncelleyin. Mevcut belirteci korumak için belirteç alanını boş bırakın.",
+        "description": "Energy Tracker hesap belirtecinizi güncelleyin. Yeni bir kişisel erişim belirteci girin veya mevcut belirteci korumak için alanı boş bırakın.",
         "data": {
-          "api_token": "Kişisel erişim jetonu (mevcut olanı korumak için boş bırakın)"
+          "api_token": "Kişisel erişim belirteci (yeni girin veya mevcut olanı korumak için boş bırakın)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Kişisel erişim jetonu yapılandırılmamış. Hesap ayarlarını kontrol edin."
+    },
+    "conflict": {
+      "message": "Bu zaman damgası için bir okuma zaten mevcut. ({error})"
     }
   },
   "services": {

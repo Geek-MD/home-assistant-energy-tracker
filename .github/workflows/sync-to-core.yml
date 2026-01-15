@@ -99,7 +99,7 @@ jobs:
           find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/import custom_components\.energy_tracker/import homeassistant.components.energy_tracker/g'
 
           # Rewrite test imports from pytest_homeassistant_custom_component to homeassistant
-          find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from pytest_homeassistant_custom_component\.common import MockConfigEntry/from homeassistant.config_entries import MockConfigEntry/g'
+          find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from pytest_homeassistant_custom_component\.common import MockConfigEntry/from tests.common import MockConfigEntry/g'
           find core-fork/tests/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/from pytest_homeassistant_custom_component\.common/from tests.common/g'
 
           # Rewrite patch paths in test strings from custom_components to homeassistant.components
@@ -118,7 +118,8 @@ jobs:
           find core-fork/tests/components/energy_tracker -type f -name "conftest.py" -print0 | xargs -0 sed -i '/pytest_plugins = "pytest_homeassistant_custom_component"/d'
 
           # Remove auto_enable_custom_integrations fixture from conftest.py (not needed in core)
-          find core-fork/tests/components/energy_tracker -type f -name "conftest.py" -print0 | xargs -0 sed -i '/@pytest.fixture(autouse=True)/,/return$/d'
+          # This removes the entire fixture block (decorator + function definition + docstring + body)
+          find core-fork/tests/components/energy_tracker -type f -name "conftest.py" -print0 | xargs -0 sed -i '/@pytest.fixture(autouse=True)/{N;N;N;N;d}'
 
           # Remove version from manifest.json (only used for custom components, not Core)
           sed -i '/"version":/d' core-fork/homeassistant/components/energy_tracker/manifest.json

@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Cấu hình lại Energy Tracker",
-        "description": "Cập nhật token tài khoản Energy Tracker của bạn. Để trống trường token để giữ token hiện tại.",
+        "description": "Cập nhật token tài khoản Energy Tracker của bạn. Nhập token truy cập cá nhân mới hoặc để trống trường để giữ token hiện tại.",
         "data": {
-          "api_token": "Mã thông báo truy cập cá nhân (để trống để giữ mã hiện có)"
+          "api_token": "Token truy cập cá nhân (nhập mới hoặc để trống để giữ token hiện tại)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Chưa cấu hình mã thông báo truy cập cá nhân. Kiểm tra cài đặt tài khoản."
+    },
+    "conflict": {
+      "message": "Đã tồn tại một bản ghi cho dấu thời gian này. ({error})"
     }
   },
   "services": {

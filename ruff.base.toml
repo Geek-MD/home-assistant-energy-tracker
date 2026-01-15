@@ -4,8 +4,8 @@
 
 extend = "ruff.core.toml"
 
-# Override target Python version
-target-version = "py311"
+# Target Python version matching Home Assistant Core (requires-python >= 3.13.2)
+target-version = "py313"
 
 # Override source paths
 src = ["custom_components", "tests"]

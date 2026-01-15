@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Omkonfigurer Energy Tracker",
-        "description": "Opdater dit Energy Tracker-kontotoken. Lad tokenfeltet stå tomt for at beholde det eksisterende token.",
+        "description": "Opdater dit Energy Tracker-kontotoken. Indtast et nyt personligt adgangstoken, eller lad feltet stå tomt for at beholde det eksisterende token.",
         "data": {
-          "api_token": "Personligt adgangstoken (lad stå tomt for at beholde eksisterende)"
+          "api_token": "Personligt adgangstoken (indtast nyt, eller lad være tom for at beholde eksisterende)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Intet personligt adgangstoken er konfigureret. Kontroller kontoindstillinger."
+    },
+    "conflict": {
+      "message": "En aflæsning for dette tidsstempel findes allerede. ({error})"
     }
   },
   "services": {

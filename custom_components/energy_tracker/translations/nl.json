@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Energy Tracker opnieuw configureren",
-        "description": "Werk uw Energy Tracker-accounttoken bij. Laat het tokenveld leeg om het bestaande token te behouden.",
+        "description": "Werk uw Energy Tracker-accounttoken bij. Voer een nieuw persoonlijk toegangstoken in of laat het veld leeg om het bestaande token te behouden.",
         "data": {
-          "api_token": "Persoonlijk toegangstoken (leeg laten om bestaande te behouden)"
+          "api_token": "Persoonlijk toegangstoken (voer nieuw in, of leeg laten om bestaande te behouden)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Geen persoonlijk toegangstoken geconfigureerd. Controleer accountinstellingen."
+    },
+    "conflict": {
+      "message": "Er bestaat al een meting voor deze tijdstempel. ({error})"
     }
   },
   "services": {

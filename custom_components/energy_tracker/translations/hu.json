@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Energy Tracker újrakonfigurálása",
-        "description": "Frissítse az Energy Tracker fiókja tokenjét. Hagyja üresen a token mezőt a meglévő token megtartásához.",
+        "description": "Frissítse az Energy Tracker fiókja tokenjét. Adjon meg egy új személyes hozzáférési tokent, vagy hagyja a mezőt üresen a meglévő token megtartásához.",
         "data": {
-          "api_token": "Személyes hozzáférési token (hagyja üresen a meglévő megtartásához)"
+          "api_token": "Személyes hozzáférési token (adjon meg újat, vagy hagyja üresen a meglévő megtartásához)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Nincs konfigurálva személyes hozzáférési token. Ellenőrizze a fiókbeállításokat."
+    },
+    "conflict": {
+      "message": "Már létezik mérés ehhez az időbélyeghez. ({error})"
     }
   },
   "services": {

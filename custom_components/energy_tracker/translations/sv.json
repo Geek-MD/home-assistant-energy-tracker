@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Omkonfigurera Energy Tracker",
-        "description": "Uppdatera din Energy Tracker-kontotoken. Lämna tokenfältet tomt för att behålla den befintliga token.",
+        "description": "Uppdatera din Energy Tracker-kontotoken. Ange en ny personlig åtkomsttoken eller lämna fältet tomt för att behålla den befintliga token.",
         "data": {
-          "api_token": "Personlig åtkomsttoken (lämna tomt för att behålla befintlig)"
+          "api_token": "Personlig åtkomsttoken (ange ny, eller lämna tom för att behålla befintlig)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Ingen personlig åtkomsttoken har konfigurerats. Kontrollera kontoinställningarna."
+    },
+    "conflict": {
+      "message": "En avläsning för denna tidsstämpel finns redan. ({error})"
     }
   },
   "services": {

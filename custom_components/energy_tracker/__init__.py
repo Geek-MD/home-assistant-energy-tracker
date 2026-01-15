@@ -1,9 +1,8 @@
-"""Initialisation for the Energy Tracker integration."""
+"""Initialization for the Energy Tracker integration."""
 
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -15,6 +14,8 @@ import voluptuous as vol
 
 from .api import EnergyTrackerApi
 from .const import CONF_API_TOKEN, DOMAIN, SERVICE_SEND_METER_READING
+
+type EnergyTrackerConfigEntry = ConfigEntry[str | None]
 
 LOGGER = logging.getLogger(__name__)
 
@@ -47,23 +48,19 @@ def _select_token_for_service(hass: HomeAssistant, call: ServiceCall) -> str | N
     Returns:
         The API token as a string if found, otherwise None.
     """
-
-    domain_data: dict[str, dict[str, Any]] | None = hass.data.get(DOMAIN)
-    if not domain_data:
-        LOGGER.debug("No Energy Tracker accounts configured")
-        return None
-
-    entry_id: str | None = call.data["entry_id"]
+    entry_id: str | None = call.data.get("entry_id")
     if not entry_id:
         LOGGER.debug("No entry ID provided")
         return None
 
-    entry_data = domain_data.get(entry_id)
-    if not entry_data:
+    entry: EnergyTrackerConfigEntry | None = hass.config_entries.async_get_entry(
+        entry_id
+    )
+    if not entry:
         LOGGER.debug("Integration with ID %s was deleted", entry_id)
         return None
 
-    token = entry_data.get(CONF_API_TOKEN)
+    token = entry.runtime_data
     if not token:
         LOGGER.error("API token not found for entry ID %s", entry_id)
         return None
@@ -160,7 +157,9 @@ async def async_handle_send_meter_reading(
     )
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(
+    hass: HomeAssistant, entry: EnergyTrackerConfigEntry
+) -> bool:
     """Set up the Energy Tracker integration from a config entry.
 
     Args:
@@ -170,13 +169,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     Returns:
         True if setup was successful, False otherwise.
     """
-
     LOGGER.debug("Setting up config entry %s", entry.entry_id)
 
-    hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = {
-        CONF_API_TOKEN: entry.data.get(CONF_API_TOKEN),
-    }
+    entry.runtime_data = entry.data.get(CONF_API_TOKEN)
 
     if not hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING):
 
@@ -194,11 +189,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(
+    hass: HomeAssistant, entry: EnergyTrackerConfigEntry
+) -> bool:
     """Unload a config entry for the Energy Tracker integration.
 
-    Removes the entry's data from hass.data and unregisters the service
-    if this was the last loaded config entry.
+    Unregisters the service if this was the last loaded config entry.
 
     Args:
         hass: The Home Assistant instance.
@@ -209,12 +205,14 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """
     LOGGER.debug("Unloading config entry %s", entry.entry_id)
 
-    domain_data = hass.data.get(DOMAIN, {})
-    domain_data.pop(entry.entry_id, None)
+    # Check if there are other loaded entries for this domain
+    loaded_entries = [
+        e
+        for e in hass.config_entries.async_entries(DOMAIN)
+        if e.entry_id != entry.entry_id and e.state.recoverable
+    ]
 
-    if not domain_data:
-        hass.data.pop(DOMAIN, None)
-
+    if not loaded_entries:
         if hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING):
             hass.services.async_remove(DOMAIN, SERVICE_SEND_METER_READING)
             LOGGER.debug(

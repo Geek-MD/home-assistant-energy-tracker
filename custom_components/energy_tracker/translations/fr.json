@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Reconfigurer Energy Tracker",
-        "description": "Mettez à jour le jeton de votre compte Energy Tracker. Laissez le champ du jeton vide pour conserver le jeton existant.",
+        "description": "Mettez à jour le jeton de votre compte Energy Tracker. Entrez un nouveau jeton d'accès personnel ou laissez le champ vide pour conserver le jeton existant.",
         "data": {
-          "api_token": "Jeton d'accès personnel (laisser vide pour conserver l'existant)"
+          "api_token": "Jeton d'accès personnel (entrer nouveau ou laisser vide pour conserver l'existant)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Aucun jeton d'accès personnel configuré. Vérifiez les paramètres du compte."
+    },
+    "conflict": {
+      "message": "Une lecture pour cet horodatage existe déjà. ({error})"
     }
   },
   "services": {

@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Reconfigurați Energy Tracker",
-        "description": "Actualizați token-ul contului dvs. Energy Tracker. Lăsați câmpul token-ului gol pentru a păstra token-ul existent.",
+        "description": "Actualizați token-ul contului dvs. Energy Tracker. Introduceți un nou token de acces personal sau lăsați câmpul gol pentru a păstra token-ul existent.",
         "data": {
-          "api_token": "Token de acces personal (lăsați gol pentru a păstra existentul)"
+          "api_token": "Token de acces personal (introduceți nou sau lăsați gol pentru a păstra cel existent)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Niciun token de acces personal nu este configurat. Verificați setările contului."
+    },
+    "conflict": {
+      "message": "Există deja o citire pentru această marcă temporală. ({error})"
     }
   },
   "services": {

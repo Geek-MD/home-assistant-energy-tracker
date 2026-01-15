@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "Překonfigurovat Energy Tracker",
-        "description": "Aktualizujte token svého účtu Energy Tracker. Ponechte pole tokenu prázdné, chcete-li zachovat stávající token.",
+        "description": "Aktualizujte token svého účtu Energy Tracker. Zadejte nový osobní přístupový token, nebo ponechte pole prázdné pro zachování stávajícího tokenu.",
         "data": {
-          "api_token": "Osobní přístupový token (ponechte prázdné pro zachování existujícího)"
+          "api_token": "Osobní přístupový token (zadejte nový, nebo ponechte prázdné pro zachování stávajícího)"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "Není nakonfigurován osobní přístupový token. Zkontrolujte nastavení účtu."
+    },
+    "conflict": {
+      "message": "Měření pro tento časový údaj již existuje. ({error})"
     }
   },
   "services": {

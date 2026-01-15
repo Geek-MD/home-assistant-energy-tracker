@@ -10,9 +10,9 @@
       },
       "reconfigure": {
         "title": "重新配置 Energy Tracker",
-        "description": "更新您的 Energy Tracker 账户令牌。将令牌字段留空以保留现有令牌。",
+        "description": "更新您的 Energy Tracker 账户令牌。输入新的个人访问令牌，或将字段留空以保留现有令牌。",
         "data": {
-          "api_token": "个人访问令牌(留空以保留现有令牌)"
+          "api_token": "个人访问令牌（输入新令牌，或留空以保留现有）"
         }
       }
     },
@@ -80,6 +80,9 @@
     },
     "no_api_token": {
       "message": "未配置个人访问令牌。请检查账户设置。"
+    },
+    "conflict": {
+      "message": "此时间戳的读数已存在。({error})"
     }
   },
   "services": {

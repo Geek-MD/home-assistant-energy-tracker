@@ -19,17 +19,7 @@ def auto_enable_custom_integrations(enable_custom_integrations):
 
 
 @pytest.fixture
-def mock_hass() -> HomeAssistant:
-    """Return a mock HomeAssistant instance."""
-    hass = MagicMock(spec=HomeAssistant)
-    hass.data = {}
-    hass.config = MagicMock()
-    hass.config.language = "en"
-    return hass
-
-
-@pytest.fixture
-def mock_issue_registry(mock_hass: HomeAssistant) -> Generator[MagicMock]:
+def mock_issue_registry(hass: HomeAssistant) -> Generator[MagicMock]:
     """Mock the issue registry."""
     with patch.object(ir, "async_create_issue") as mock_create:
         yield mock_create
