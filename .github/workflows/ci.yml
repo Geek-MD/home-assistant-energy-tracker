@@ -69,6 +69,6 @@ jobs:
 
       - name: Check JSON formatting
         run: |
-          for file in custom_components/energy_tracker/manifest.json custom_components/energy_tracker/translations/*.json; do
+          find custom_components/energy_tracker -name "*.json" | while read file; do
             python3 -c "import json,sys; d=json.load(open('$file')); formatted=json.dumps(d,ensure_ascii=False,indent=2)+'\n'; current=open('$file').read(); sys.exit(0 if formatted==current else 1)" || (echo "❌ $file is not formatted correctly. Run 'make format' locally." && exit 1)
           done
