@@ -189,7 +189,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _handle_send_meter_reading,
             schema=SERVICE_SEND_METER_READING_SCHEMA,
         )
-        LOGGER.debug("Registered service %s. %s", DOMAIN, SERVICE_SEND_METER_READING)
+        LOGGER.debug("Registered service %s/%s", DOMAIN, SERVICE_SEND_METER_READING)
 
     return True
 

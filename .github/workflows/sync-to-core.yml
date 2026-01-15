@@ -100,6 +100,12 @@ jobs:
           # Remove type: ignore comments that are not needed in Core (Core has proper type stubs)
           find core-fork/homeassistant/components/energy_tracker -type f -name "*.py" -print0 | xargs -0 sed -i 's/  # type: ignore\[call-arg\]//g'
 
+          # Rewrite config_flow.py imports for Core (Core requires ConfigFlow and ConfigFlowResult from config_entries)
+          sed -i 's/from homeassistant import config_entries/from homeassistant.config_entries import ConfigFlow, ConfigFlowResult/g' core-fork/homeassistant/components/energy_tracker/config_flow.py
+          sed -i '/from homeassistant.data_entry_flow import FlowResult/d' core-fork/homeassistant/components/energy_tracker/config_flow.py
+          sed -i 's/config_entries\.ConfigFlow/ConfigFlow/g' core-fork/homeassistant/components/energy_tracker/config_flow.py
+          sed -i 's/) -> FlowResult:/) -> ConfigFlowResult:/g' core-fork/homeassistant/components/energy_tracker/config_flow.py
+
           # Remove pytest_homeassistant_custom_component plugin line from conftest.py (not needed in core)
           find core-fork/tests/components/energy_tracker -type f -name "conftest.py" -print0 | xargs -0 sed -i '/pytest_plugins = "pytest_homeassistant_custom_component"/d'
 
