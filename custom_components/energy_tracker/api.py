@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import logging
 from datetime import datetime
+import logging
 
 from energy_tracker_api import (
     AuthenticationError,
@@ -17,7 +17,6 @@ from energy_tracker_api import (
     TimeoutError,
     ValidationError,
 )
-
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import issue_registry as ir
@@ -173,7 +172,7 @@ class EnergyTrackerApi:
 
         except Exception as err:
             # Unexpected errors
-            LOGGER.exception("%s Unexpected error: %s", log_prefix, err)
+            LOGGER.exception("%s Unexpected error", log_prefix)
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="unknown_error",

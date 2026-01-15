@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
 from energy_tracker_api import (
     AuthenticationError,
     EnergyTrackerAPIError,
@@ -17,6 +16,7 @@ from energy_tracker_api import (
     ValidationError,
 )
 from homeassistant.exceptions import HomeAssistantError
+import pytest
 
 from custom_components.energy_tracker.api import EnergyTrackerApi
 
@@ -56,7 +56,7 @@ class TestSendMeterReading:
     ):
         """Test successful meter reading submission."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -90,7 +90,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading submission without rounding."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -120,7 +120,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with validation error (HTTP 400)."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -155,7 +155,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with authentication error (HTTP 401)."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -192,7 +192,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with forbidden error (HTTP 403)."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -229,7 +229,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with not found error (HTTP 404)."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -258,7 +258,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with rate limit error including retry_after."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -288,7 +288,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with rate limit error without retry_after."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -317,7 +317,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with timeout error."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -346,7 +346,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with network error."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -375,7 +375,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with server error (5xx)."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"
@@ -410,7 +410,7 @@ class TestSendMeterReading:
     ):
         """Test meter reading with unexpected error."""
         # Arrange
-        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=timezone.utc)
+        timestamp = datetime(2025, 11, 28, 10, 30, 0, tzinfo=UTC)
 
         with patch(
             "custom_components.energy_tracker.api.EnergyTrackerClient"

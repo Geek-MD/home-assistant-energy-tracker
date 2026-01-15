@@ -5,10 +5,10 @@ from __future__ import annotations
 import inspect
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError
+import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.energy_tracker import (
@@ -38,9 +38,8 @@ def create_service_call(
     # If 'hass' is the second parameter (after 'self'), use positional
     if len(params) > 1 and params[1] == "hass":
         return ServiceCall(hass, domain, service, data=data)
-    else:
-        # Older version expects domain as first arg
-        return ServiceCall(domain=domain, service=service, data=data)
+    # Older version expects domain as first arg
+    return ServiceCall(domain=domain, service=service, data=data)
 
 
 class TestAsyncSetup:
@@ -110,7 +109,7 @@ class TestAsyncSetupEntry:
         # Assert
         assert hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
         # Service should only be registered once
-        assert len([s for s in hass.services.async_services()[DOMAIN]]) == 1
+        assert len(list(hass.services.async_services()[DOMAIN])) == 1
 
 
 class TestAsyncUnloadEntry:
@@ -444,9 +443,11 @@ class TestAsyncHandleSendMeterReading:
 
         # Act & Assert
         # Patch the hass.states.get call at module level
-        with patch("homeassistant.core.StateMachine.get", return_value=mock_state):
-            with pytest.raises(HomeAssistantError) as exc_info:
-                await async_handle_send_meter_reading(hass, call)
+        with (
+            patch("homeassistant.core.StateMachine.get", return_value=mock_state),
+            pytest.raises(HomeAssistantError) as exc_info,
+        ):
+            await async_handle_send_meter_reading(hass, call)
 
         assert exc_info.value.translation_domain == DOMAIN
         assert exc_info.value.translation_key == "missing_timestamp"

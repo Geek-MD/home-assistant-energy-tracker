@@ -16,7 +16,8 @@ run-ha:
 	. .venv/bin/activate && hass --config .
 
 lint:
-	. .venv/bin/activate && ruff check --config ruff.base.toml custom_components tests
+	. .venv/bin/activate && ruff check --config ruff.base.toml --fix custom_components tests
+	. .venv/bin/activate && mypy custom_components
 
 format:
 	. .venv/bin/activate && ruff format --config ruff.base.toml custom_components tests
