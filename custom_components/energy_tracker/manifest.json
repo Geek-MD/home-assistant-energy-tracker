@@ -13,5 +13,6 @@
   ],
   "config_flow": true,
   "integration_type": "service",
-  "iot_class": "cloud"
+  "iot_class": "cloud_push",
+  "quality_scale": "bronze"
 }

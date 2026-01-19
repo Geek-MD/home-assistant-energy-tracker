@@ -57,10 +57,7 @@ class TestAsyncSetupEntry:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={
-                "name": "Test Account",
-                CONF_API_TOKEN: "test-token-123",
-            },
+            data={CONF_API_TOKEN: "test-token-123"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -78,7 +75,7 @@ class TestAsyncSetupEntry:
         entry1 = MockConfigEntry(
             domain=DOMAIN,
             title="Account 1",
-            data={"name": "Account 1", CONF_API_TOKEN: "token-1"},
+            data={CONF_API_TOKEN: "token-1"},
             entry_id="entry-1",
         )
         entry1.add_to_hass(hass)
@@ -86,7 +83,7 @@ class TestAsyncSetupEntry:
         entry2 = MockConfigEntry(
             domain=DOMAIN,
             title="Account 2",
-            data={"name": "Account 2", CONF_API_TOKEN: "token-2"},
+            data={CONF_API_TOKEN: "token-2"},
             entry_id="entry-2",
         )
         entry2.add_to_hass(hass)
@@ -110,7 +107,7 @@ class TestAsyncUnloadEntry:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -128,7 +125,7 @@ class TestAsyncUnloadEntry:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -149,7 +146,7 @@ class TestAsyncUnloadEntry:
         entry1 = MockConfigEntry(
             domain=DOMAIN,
             title="Account 1",
-            data={"name": "Account 1", CONF_API_TOKEN: "token-1"},
+            data={CONF_API_TOKEN: "token-1"},
             entry_id="entry-1",
         )
         entry1.add_to_hass(hass)
@@ -157,7 +154,7 @@ class TestAsyncUnloadEntry:
         entry2 = MockConfigEntry(
             domain=DOMAIN,
             title="Account 2",
-            data={"name": "Account 2", CONF_API_TOKEN: "token-2"},
+            data={CONF_API_TOKEN: "token-2"},
             entry_id="entry-2",
         )
         entry2.add_to_hass(hass)
@@ -183,7 +180,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -229,7 +226,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -263,7 +260,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -301,7 +298,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -335,7 +332,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -373,7 +370,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -477,7 +474,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -514,7 +511,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
@@ -548,7 +545,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="existing-entry-id",
         )
         entry.add_to_hass(hass)
@@ -581,7 +578,7 @@ class TestAsyncHandleSendMeterReading:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Test Account",
-            data={"name": "Test Account", CONF_API_TOKEN: "test-token"},
+            data={CONF_API_TOKEN: "test-token"},
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
