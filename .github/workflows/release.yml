@@ -13,9 +13,34 @@ jobs:
     name: CI
     uses: ./.github/workflows/ci-base.yml
 
+  hacs:
+    name: HACS Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: HACS validation
+        uses: hacs/action@main
+        with:
+          category: integration
+
+  hassfest:
+    name: Hassfest Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Hassfest validation
+        uses: home-assistant/actions/hassfest@master
+
   release:
     name: Create Release
-    needs: ci
+    needs:
+      - ci
+      - hacs
+      - hassfest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
