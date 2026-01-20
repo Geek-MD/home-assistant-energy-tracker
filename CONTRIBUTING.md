@@ -16,13 +16,14 @@
 
 ### Core Sync
 
-1. Create and push core tag:
+1. Commit and push changes
+2. Create and push core tag:
    ```bash
    git tag core-v1.2.3
    git push origin core-v1.2.3
    ```
-2. GitHub Action syncs to `energy-tracker/core` fork
-3. Manually create PR from fork to `home-assistant/core`
+3. GitHub Action syncs to `energy-tracker/core` fork
+4. Manually create PR from fork to `home-assistant/core`
 
 ## Tag Conventions
 
