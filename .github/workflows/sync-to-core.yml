@@ -9,8 +9,13 @@ permissions:
   contents: write
 
 jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci-base.yml
+
   sync:
     name: Sync to Core Fork
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source repository
@@ -34,17 +39,10 @@ jobs:
           path: core-fork
           fetch-depth: 0
 
-      - name: Get Python version from Core
-        id: python-version
-        working-directory: core-fork
-        run: |
-          VERSION=$(grep -E '^\s*DEFAULT_PYTHON:' .github/workflows/ci.yaml | sed 's/.*: *"\(.*\)"/\1/')
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ steps.python-version.outputs.version }}
+          python-version: ${{ needs.ci.outputs.python-version }}
 
       - name: Configure git
         working-directory: core-fork

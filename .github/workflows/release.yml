@@ -9,77 +9,13 @@ permissions:
   contents: write
 
 jobs:
-  setup:
-    name: Setup
-    runs-on: ubuntu-latest
-    outputs:
-      python-version: ${{ steps.python-version.outputs.version }}
-    steps:
-      - name: Checkout Home Assistant Core
-        uses: actions/checkout@v4
-        with:
-          repository: home-assistant/core
-          sparse-checkout: .github/workflows/ci.yaml
-          sparse-checkout-cone-mode: false
-
-      - name: Get Python version from Core
-        id: python-version
-        run: |
-          VERSION=$(grep -E '^\s*DEFAULT_PYTHON:' .github/workflows/ci.yaml | sed 's/.*: *"\(.*\)"/\1/')
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-
-  test:
-    name: Test
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ needs.setup.outputs.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-
-      - name: Run tests
-        run: pytest tests/ -v
-
-  lint:
-    name: Lint
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ needs.setup.outputs.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-
-      - name: Run ruff
-        run: |
-          ruff format --check custom_components tests
-          ruff check custom_components tests
-
-      - name: Run mypy
-        run: mypy custom_components
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci-base.yml
 
   release:
     name: Create Release
-    needs:
-      - test
-      - lint
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
