@@ -9,8 +9,77 @@ permissions:
   contents: write
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      python-version: ${{ steps.python-version.outputs.version }}
+    steps:
+      - name: Checkout Home Assistant Core
+        uses: actions/checkout@v4
+        with:
+          repository: home-assistant/core
+          sparse-checkout: .github/workflows/ci.yaml
+          sparse-checkout-cone-mode: false
+
+      - name: Get Python version from Core
+        id: python-version
+        run: |
+          VERSION=$(grep -E '^\s*DEFAULT_PYTHON:' .github/workflows/ci.yaml | sed 's/.*: *"\(.*\)"/\1/')
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+  test:
+    name: Test
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ needs.setup.outputs.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+  lint:
+    name: Lint
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ needs.setup.outputs.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run ruff
+        run: |
+          ruff format --check custom_components tests
+          ruff check custom_components tests
+
+      - name: Run mypy
+        run: mypy custom_components
+
   release:
     name: Create Release
+    needs:
+      - test
+      - lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,6 +90,18 @@ jobs:
       - name: Extract tag name
         id: tag
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Validate version matches tag
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
+        run: |
+          MANIFEST_VERSION=$(jq -r '.version' custom_components/energy_tracker/manifest.json)
+          TAG_VERSION=${TAG_NAME#v}
+          if [ "$MANIFEST_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ Version mismatch: manifest.json has '$MANIFEST_VERSION', tag is '$TAG_VERSION'"
+            exit 1
+          fi
+          echo "✅ Version match: $MANIFEST_VERSION"
 
       - name: Generate changelog
         id: changelog
@@ -41,48 +122,25 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          name: Release ${{ steps.tag.outputs.TAG_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
+          name: Release ${{ env.TAG_NAME }}
           body: |
-            ## Energy Tracker Integration ${{ steps.tag.outputs.TAG_NAME }}
+            ## Energy Tracker Integration ${{ env.TAG_NAME }}
 
-            This release includes the Energy Tracker integration for Home Assistant Core.
+            Install via [HACS](https://hacs.xyz/) or manually copy `custom_components/energy_tracker/` to your Home Assistant config.
 
-            ### Changes in this Release
+            ### Changes
 
             ${{ steps.changelog.outputs.COMMITS }}
 
             ### Documentation
 
-            - [README](https://github.com/energy-tracker/home-assistant-energy-tracker/blob/main/README.md)
+            - [README](https://github.com/energy-tracker/home-assistant-energy-tracker#readme)
             - [Energy Tracker Website](https://www.energy-tracker.best-ios-apps.de)
-
-            ---
-
-            **Note**: This release automatically triggers a sync to the [Home Assistant Core fork](https://github.com/energy-tracker/core) for PR submission.
           draft: false
           prerelease: false
           generate_release_notes: false
-
-  notify:
-    name: Notify Sync Status
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Extract tag name
-        id: tag
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Post status comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tag = '${{ steps.tag.outputs.TAG_NAME }}';
-            const message = `✅ Release ${tag} created successfully!\n\n` +
-              `The sync workflow is now running to create a branch in the Home Assistant Core fork.\n\n` +
-              `Branch: \`energy-tracker-${tag}\`\n` +
-              `Fork: https://github.com/energy-tracker/core`;
-            
-            console.log(message);

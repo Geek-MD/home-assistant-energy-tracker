@@ -1,6 +1,7 @@
 # Energy Tracker Integration for Home Assistant
 
 [![GitHub Release](https://img.shields.io/github/release/energy-tracker/home-assistant-energy-tracker.svg)](https://github.com/energy-tracker/home-assistant-energy-tracker/releases)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![License](https://img.shields.io/github/license/energy-tracker/home-assistant-energy-tracker.svg)](LICENSE)
 
 Send meter readings from Home Assistant sensors automatically to your [Energy Tracker](https://www.energy-tracker.best-ios-apps.de) account.
@@ -15,19 +16,37 @@ Send meter readings from Home Assistant sensors automatically to your [Energy Tr
 - ✅ **Comprehensive Error Handling**: Clear error messages and repair flows
 - ✅ **Cloud Integration**: Direct API connection to Energy Tracker service
 
-## Configuration
+## Installation
 
-### Prerequisites
+> **Note**: This integration is currently available via HACS only. Home Assistant Core integration is planned for the future.
 
-Before configuring the integration, you need an [Energy Tracker account](https://www.energy-tracker.best-ios-apps.de):
+### Step 1: Install the Integration
 
-1. Create an account at [www.energy-tracker.best-ios-apps.de](https://www.energy-tracker.best-ios-apps.de)
-2. Log in to your Energy Tracker account
-3. Navigate to **API** → **Access Tokens**
-4. Create a new **Personal Access Token**
-5. Copy the token - you'll need it for the integration setup
+#### Option A: Via HACS (Recommended)
 
-### Step 1: Add Integration in Home Assistant
+1. Open [HACS](https://hacs.xyz/) in Home Assistant
+2. Go to **Integrations**
+3. Click **+ Explore & Download Repositories**
+4. Search for "Energy Tracker"
+5. Click **Download**
+6. Restart Home Assistant
+
+#### Option B: Manual Installation
+
+1. Download the latest release from [GitHub Releases](https://github.com/energy-tracker/home-assistant-energy-tracker/releases)
+2. Copy the `custom_components/energy_tracker/` folder to your Home Assistant `config/custom_components/` directory
+3. Restart Home Assistant
+
+### Step 2: Configure the Integration
+
+Before configuring, you need an API token from your [Energy Tracker account](https://www.energy-tracker.best-ios-apps.de):
+
+1. Log in at [www.energy-tracker.best-ios-apps.de](https://www.energy-tracker.best-ios-apps.de)
+2. Navigate to **API** → **Access Tokens**
+3. Create a new **Personal Access Token**
+4. Copy the token
+
+Then in Home Assistant:
 
 1. Go to **Settings** → **Devices & Services**
 2. Click **+ Add Integration**
@@ -36,7 +55,7 @@ Before configuring the integration, you need an [Energy Tracker account](https:/
 5. Paste your personal access token
 6. Click **Submit**
 
-### Step 2: Get Your Standard Measuring Device ID
+### Step 3: Get Your Standard Measuring Device ID
 
 You need the device ID to send meter readings. There are two ways to get it:
 
@@ -105,7 +124,7 @@ The integration accepts meter readings from:
 
 ## Error Handling
 
-The integration provides comprehensive error handling with detailed logs and Home Assistant issue notifications for authentication errors and other problems.
+The integration provides comprehensive error handling with localized error messages.
 
 ## Troubleshooting
 
