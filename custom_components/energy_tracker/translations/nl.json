@@ -67,7 +67,7 @@
       "message": "Entiteit {entity_id} is {state}."
     },
     "invalid_number": {
-      "message": "Waarde '{state}' van entiteit {entity_id} is geen getal."
+      "message": "Waarde \"{state}\" van entiteit {entity_id} is geen getal."
     },
     "missing_timestamp": {
       "message": "Entiteit {entity_id} heeft geen tijdstempel."

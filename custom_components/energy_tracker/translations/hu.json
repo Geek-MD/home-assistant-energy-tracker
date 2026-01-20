@@ -67,7 +67,7 @@
       "message": "Az {entity_id} entitás {state} állapotban van."
     },
     "invalid_number": {
-      "message": "Az {entity_id} entitás '{state}' értéke nem szám."
+      "message": "Az {entity_id} entitás \"{state}\" értéke nem szám."
     },
     "missing_timestamp": {
       "message": "Az {entity_id} entitásnak nincs időbélyege."

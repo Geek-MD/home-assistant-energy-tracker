@@ -67,7 +67,7 @@
       "message": "La entidad {entity_id} está {state}."
     },
     "invalid_number": {
-      "message": "El valor '{state}' de la entidad {entity_id} no es un número."
+      "message": "El valor \"{state}\" de la entidad {entity_id} no es un número."
     },
     "missing_timestamp": {
       "message": "La entidad {entity_id} no tiene marca de tiempo."

@@ -67,7 +67,7 @@
       "message": "Entitatea {entity_id} este în starea {state}."
     },
     "invalid_number": {
-      "message": "Valoarea '{state}' a entității {entity_id} nu este un număr."
+      "message": "Valoarea \"{state}\" a entității {entity_id} nu este un număr."
     },
     "missing_timestamp": {
       "message": "Entitatea {entity_id} nu are un timestamp."

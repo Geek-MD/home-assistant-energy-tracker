@@ -67,7 +67,7 @@
       "message": "Encja {entity_id} jest {state}."
     },
     "invalid_number": {
-      "message": "Wartość '{state}' encji {entity_id} nie jest liczbą."
+      "message": "Wartość \"{state}\" encji {entity_id} nie jest liczbą."
     },
     "missing_timestamp": {
       "message": "Encja {entity_id} nie ma znacznika czasu."

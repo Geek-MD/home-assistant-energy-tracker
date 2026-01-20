@@ -67,7 +67,7 @@
       "message": "实体 {entity_id} 处于 {state} 状态。"
     },
     "invalid_number": {
-      "message": "实体 {entity_id} 的值 '{state}' 不是数字。"
+      "message": "实体 {entity_id} 的值 \"{state}\" 不是数字。"
     },
     "missing_timestamp": {
       "message": "实体 {entity_id} 没有时间戳。"

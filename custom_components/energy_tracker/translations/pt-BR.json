@@ -67,7 +67,7 @@
       "message": "A entidade {entity_id} está {state}."
     },
     "invalid_number": {
-      "message": "O valor '{state}' da entidade {entity_id} não é um número."
+      "message": "O valor \"{state}\" da entidade {entity_id} não é um número."
     },
     "missing_timestamp": {
       "message": "A entidade {entity_id} não tem um carimbo de data/hora."

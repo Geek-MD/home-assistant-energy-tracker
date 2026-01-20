@@ -67,7 +67,7 @@
       "message": "Entität {entity_id} ist {state}."
     },
     "invalid_number": {
-      "message": "Wert '{state}' von Entität {entity_id} ist keine Zahl."
+      "message": "Wert \"{state}\" von Entität {entity_id} ist keine Zahl."
     },
     "missing_timestamp": {
       "message": "Entität {entity_id} hat keinen Zeitstempel."

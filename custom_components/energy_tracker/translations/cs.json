@@ -67,7 +67,7 @@
       "message": "Entita {entity_id} je ve stavu {state}."
     },
     "invalid_number": {
-      "message": "Hodnota '{state}' entity {entity_id} není číslo."
+      "message": "Hodnota \"{state}\" entity {entity_id} není číslo."
     },
     "missing_timestamp": {
       "message": "Entita {entity_id} nemá časové razítko."

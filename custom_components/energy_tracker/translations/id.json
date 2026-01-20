@@ -67,7 +67,7 @@
       "message": "Entitas {entity_id} dalam keadaan {state}."
     },
     "invalid_number": {
-      "message": "Nilai '{state}' dari entitas {entity_id} bukan angka."
+      "message": "Nilai \"{state}\" dari entitas {entity_id} bukan angka."
     },
     "missing_timestamp": {
       "message": "Entitas {entity_id} tidak memiliki stempel waktu."

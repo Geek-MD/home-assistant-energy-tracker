@@ -67,7 +67,7 @@
       "message": "Об'єкт {entity_id} знаходиться в стані {state}."
     },
     "invalid_number": {
-      "message": "Значення '{state}' об'єкта {entity_id} не є числом."
+      "message": "Значення \"{state}\" об'єкта {entity_id} не є числом."
     },
     "missing_timestamp": {
       "message": "Об'єкт {entity_id} не має часової мітки."

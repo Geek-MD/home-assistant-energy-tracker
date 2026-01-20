@@ -17,6 +17,8 @@ from .const import CONF_API_TOKEN, DOMAIN, SERVICE_SEND_METER_READING
 
 type EnergyTrackerConfigEntry = ConfigEntry[str]
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 LOGGER = logging.getLogger(__name__)
 
 SERVICE_SEND_METER_READING_SCHEMA = vol.Schema(

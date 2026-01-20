@@ -67,7 +67,7 @@
       "message": "實體 {entity_id} 處於 {state} 狀態。"
     },
     "invalid_number": {
-      "message": "實體 {entity_id} 的值 '{state}' 不是數字。"
+      "message": "實體 {entity_id} 的值 \"{state}\" 不是數字。"
     },
     "missing_timestamp": {
       "message": "實體 {entity_id} 沒有時間戳記。"

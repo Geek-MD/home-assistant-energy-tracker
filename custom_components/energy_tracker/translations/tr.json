@@ -67,7 +67,7 @@
       "message": "Varlık {entity_id} durumu {state}."
     },
     "invalid_number": {
-      "message": "Varlık {entity_id} için '{state}' değeri bir sayı değil."
+      "message": "Varlık {entity_id} için \"{state}\" değeri bir sayı değil."
     },
     "missing_timestamp": {
       "message": "Varlık {entity_id} için zaman damgası yok."

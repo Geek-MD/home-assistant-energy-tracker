@@ -67,7 +67,7 @@
       "message": "Entitet {entity_id} är {state}."
     },
     "invalid_number": {
-      "message": "Värdet '{state}' för entitet {entity_id} är inte ett nummer."
+      "message": "Värdet \"{state}\" för entitet {entity_id} är inte ett nummer."
     },
     "missing_timestamp": {
       "message": "Entitet {entity_id} har ingen tidsstämpel."

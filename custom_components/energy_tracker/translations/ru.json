@@ -67,7 +67,7 @@
       "message": "Объект {entity_id} находится в состоянии {state}."
     },
     "invalid_number": {
-      "message": "Значение '{state}' объекта {entity_id} не является числом."
+      "message": "Значение \"{state}\" объекта {entity_id} не является числом."
     },
     "missing_timestamp": {
       "message": "Объект {entity_id} не имеет временной метки."

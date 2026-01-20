@@ -67,7 +67,7 @@
       "message": "Η οντότητα {entity_id} είναι {state}."
     },
     "invalid_number": {
-      "message": "Η τιμή '{state}' της οντότητας {entity_id} δεν είναι αριθμός."
+      "message": "Η τιμή \"{state}\" της οντότητας {entity_id} δεν είναι αριθμός."
     },
     "missing_timestamp": {
       "message": "Η οντότητα {entity_id} δεν έχει χρονική σήμανση."

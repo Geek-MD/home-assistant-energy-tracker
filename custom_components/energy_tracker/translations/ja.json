@@ -67,7 +67,7 @@
       "message": "エンティティ {entity_id} は {state} です。"
     },
     "invalid_number": {
-      "message": "エンティティ {entity_id} の値 '{state}' は数値ではありません。"
+      "message": "エンティティ {entity_id} の値 \"{state}\" は数値ではありません。"
     },
     "missing_timestamp": {
       "message": "エンティティ {entity_id} にタイムスタンプがありません。"

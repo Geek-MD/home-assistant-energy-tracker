@@ -67,7 +67,7 @@
       "message": "Entiteetti {entity_id} on tilassa {state}."
     },
     "invalid_number": {
-      "message": "Entiteetin {entity_id} arvo '{state}' ei ole numero."
+      "message": "Entiteetin {entity_id} arvo \"{state}\" ei ole numero."
     },
     "missing_timestamp": {
       "message": "Entiteetillä {entity_id} ei ole aikaleimaa."
