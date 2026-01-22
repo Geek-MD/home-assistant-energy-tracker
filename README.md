@@ -75,11 +75,20 @@ You need the device ID to send meter readings. There are two ways to get it:
 
 ## Usage
 
+This integration provides a service only — no entities are created. Create an automation to send meter readings.
+
+### Step 4: Create an Automation
+
+1. Go to **Settings** → **Automations & Scenes**
+2. Click **+ Create Automation**
+3. Add a **Trigger** (e.g., time-based: daily at 23:55)
+4. Click **Add action** and search for **Energy Tracker: Send meter reading**
+5. Fill in the required fields
+6. Save the automation
+
+## Reference
+
 ### Action `energy_tracker.send_meter_reading`
-
-Send a meter reading from a Home Assistant sensor to Energy Tracker.
-
-#### Action Parameters
 
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
@@ -88,9 +97,7 @@ Send a meter reading from a Home Assistant sensor to Energy Tracker.
 | `source_entity_id` | Yes | entity_id | Home Assistant sensor providing the meter reading |
 | `allow_rounding` | No | boolean | Round value to meter precision (default: `true`) |
 
-### Example Automation
-
-Send your electricity meter reading daily at 23:55:
+### Example Automation (YAML)
 
 ```yaml
 - alias: "Send daily electricity reading"
@@ -106,9 +113,7 @@ Send your electricity meter reading daily at 23:55:
         allow_rounding: true
 ```
 
-Use the visual automation editor to automatically select your account and sensor from dropdowns.
-
-## Supported Entity Types
+### Supported Entity Types
 
 The integration accepts meter readings from:
 
