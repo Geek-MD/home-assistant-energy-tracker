@@ -1,8 +1,8 @@
 # Energy Tracker Integration for Home Assistant
 
-[![GitHub Release](https://img.shields.io/github/release/energy-tracker/home-assistant-energy-tracker.svg)](https://github.com/energy-tracker/home-assistant-energy-tracker/releases)
+[![GitHub Release](https://img.shields.io/github/release/Geek-MD/home-assistant-energy-tracker.svg)](https://github.com/Geek-MD/home-assistant-energy-tracker/releases)
 [![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
-[![License](https://img.shields.io/github/license/energy-tracker/home-assistant-energy-tracker.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/Geek-MD/home-assistant-energy-tracker.svg)](LICENSE)
 
 Integrate your [Energy Tracker](https://www.energy-tracker.best-ios-apps.de) account with Home Assistant to automatically sync meter readings and create sensors for all your Energy Tracker devices.
 
@@ -38,7 +38,7 @@ Integrate your [Energy Tracker](https://www.energy-tracker.best-ios-apps.de) acc
 
 #### Option B: Manual Installation
 
-1. Download the latest release from [GitHub Releases](https://github.com/energy-tracker/home-assistant-energy-tracker/releases)
+1. Download the latest release from [GitHub Releases](https://github.com/Geek-MD/home-assistant-energy-tracker/releases)
 2. Copy the `custom_components/energy_tracker/` folder to your Home Assistant `config/custom_components/` directory
 3. Restart Home Assistant
 

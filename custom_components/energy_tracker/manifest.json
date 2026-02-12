@@ -2,14 +2,14 @@
   "domain": "energy_tracker",
   "name": "Energy Tracker",
   "codeowners": [
-    "@energy-tracker"
+    "@Geek-MD"
   ],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/energy-tracker/home-assistant-energy-tracker#readme",
+  "documentation": "https://github.com/Geek-MD/home-assistant-energy-tracker#readme",
   "integration_type": "service",
   "iot_class": "cloud_push",
-  "issue_tracker": "https://github.com/energy-tracker/home-assistant-energy-tracker/issues",
+  "issue_tracker": "https://github.com/Geek-MD/home-assistant-energy-tracker/issues",
   "quality_scale": "bronze",
   "requirements": [
     "energy-tracker-api==1.0.0"
