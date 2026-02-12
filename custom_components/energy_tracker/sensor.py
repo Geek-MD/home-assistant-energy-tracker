@@ -74,7 +74,7 @@ async def _async_update_data(api: EnergyTrackerApi) -> list[dict[str, Any]]:
         api: The Energy Tracker API instance.
 
     Returns:
-        List of device dictionaries with detailed information.
+        List of device dictionaries with latest meter readings.
 
     Raises:
         UpdateFailed: If the data update fails.
@@ -83,27 +83,37 @@ async def _async_update_data(api: EnergyTrackerApi) -> list[dict[str, Any]]:
         # First, get the list of all devices
         devices = await api.get_devices()
 
-        # Then, fetch detailed information for each device
-        detailed_devices = []
+        # Then, fetch the latest meter reading for each device
+        enriched_devices = []
         for device in devices:
             device_id = device.get("id")
             if device_id:
                 try:
-                    details = await api.get_device_details(device_id)
-                    # Merge basic info with detailed info
-                    details["id"] = device_id
-                    details["name"] = device.get("name", details.get("name", "Unknown"))
-                    details["folderPath"] = device.get("folderPath", "/")
-                    details["lastUpdatedAt"] = device.get("lastUpdatedAt")
-                    detailed_devices.append(details)
+                    # Get the latest meter reading (sort=desc, limit to 1)
+                    readings = await api.get_meter_readings(
+                        device_id, limit=1, sort="desc"
+                    )
+
+                    # Add reading data to device info
+                    if readings:
+                        latest_reading = readings[0]
+                        device["latest_reading"] = latest_reading
+                        device["value"] = latest_reading.get("value")
+                        device["timestamp"] = latest_reading.get("timestamp")
+                        device["meter_id"] = latest_reading.get("meterId")
+                        device["meter_number"] = latest_reading.get("meterNumber")
+                        device["note"] = latest_reading.get("note")
+                        device["rollover_offset"] = latest_reading.get("rolloverOffset")
+
+                    enriched_devices.append(device)
                 except Exception as err:
                     LOGGER.warning(
-                        "Failed to fetch details for device %s: %s", device_id, err
+                        "Failed to fetch readings for device %s: %s", device_id, err
                     )
-                    # Still add the basic device info even if details fail
-                    detailed_devices.append(device)
+                    # Still add the basic device info even if readings fail
+                    enriched_devices.append(device)
 
-        return detailed_devices
+        return enriched_devices
     except Exception as err:
         raise UpdateFailed(f"Error fetching device data: {err}") from err
 
@@ -204,11 +214,25 @@ class EnergyTrackerSensor(CoordinatorEntity, SensorEntity):
 
         for device in self.coordinator.data:
             if device.get("id") == self._device_id:
-                # Add relevant device information as attributes
+                # Add device information from basic API
                 if "lastUpdatedAt" in device:
                     attributes["last_updated_at"] = device["lastUpdatedAt"]
                 if "folderPath" in device:
                     attributes["folder_path"] = device["folderPath"]
+
+                # Add meter reading information
+                if "timestamp" in device:
+                    attributes["reading_timestamp"] = device["timestamp"]
+                if "meter_id" in device:
+                    attributes["meter_id"] = device["meter_id"]
+                if "meter_number" in device:
+                    attributes["meter_number"] = device["meter_number"]
+                if "note" in device and device["note"]:
+                    attributes["note"] = device["note"]
+                if "rollover_offset" in device:
+                    attributes["rollover_offset"] = device["rollover_offset"]
+
+                # Legacy fields for compatibility
                 if "lastUpdated" in device:
                     attributes["last_updated"] = device["lastUpdated"]
                 if "lastReadingDate" in device:
@@ -217,8 +241,6 @@ class EnergyTrackerSensor(CoordinatorEntity, SensorEntity):
                     attributes["meter_type"] = device.get("meterType") or device.get(
                         "type"
                     )
-                if "meterNumber" in device:
-                    attributes["meter_number"] = device["meterNumber"]
                 if "location" in device:
                     attributes["location"] = device["location"]
                 if "deviceId" in device:

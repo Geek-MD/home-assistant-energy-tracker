@@ -315,3 +315,99 @@ class EnergyTrackerApi:
                 translation_key="unknown_error",
                 translation_placeholders={"error": str(err)},
             ) from err
+
+    async def get_meter_readings(
+        self, device_id: str, limit: int = 1, sort: str = "desc"
+    ) -> list[dict[str, Any]]:
+        """Fetch meter readings for a specific device.
+
+        Args:
+            device_id: UUID of the device to fetch readings for.
+            limit: Maximum number of readings to return (not supported by API,
+                   but we can slice the result).
+            sort: Sort order - 'desc' for newest first, 'asc' for oldest first.
+
+        Returns:
+            List of meter reading dictionaries containing:
+            - timestamp (str): ISO 8601 timestamp of the reading
+            - value (str): Reading value as decimal string
+            - rolloverOffset (int): Offset applied after meter rollover
+            - note (str|None): Optional note about the reading
+            - meterId (str): UUID of the associated meter
+            - meterNumber (str|None): Optional external meter number
+
+        Raises:
+            HomeAssistantError: If the API request fails.
+        """
+        try:
+            # Make direct API request to get meter readings
+            endpoint = f"/v3/devices/standard/{device_id}/meter-readings"
+            params = {"sort": sort}
+
+            response = await self._client._make_request(
+                method="GET",
+                endpoint=endpoint,
+                params=params,
+            )
+            readings = await response.json()
+
+            # Limit the results if needed
+            if limit and len(readings) > limit:
+                readings = readings[:limit]
+
+            LOGGER.debug(
+                "Fetched %d meter reading(s) for device %s", len(readings), device_id
+            )
+            return readings
+
+        except ResourceNotFoundError as err:
+            LOGGER.warning("Device %s not found: %s", device_id, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="device_not_found",
+            ) from err
+
+        except AuthenticationError as err:
+            LOGGER.error("Authentication failed: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ForbiddenError as err:
+            LOGGER.error("Access forbidden: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except TimeoutError as err:
+            LOGGER.error("Request timeout: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="timeout",
+            ) from err
+
+        except NetworkError as err:
+            LOGGER.error("Network error: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="network_error",
+            ) from err
+
+        except EnergyTrackerAPIError as err:
+            LOGGER.error("API error: %s", err)
+            msg = "; ".join(err.api_message) if err.api_message else str(err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="server_error",
+                translation_placeholders={"error": msg},
+            ) from err
+
+        except Exception as err:
+            LOGGER.exception("Unexpected error fetching meter readings")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="unknown_error",
+                translation_placeholders={"error": str(err)},
+            ) from err
