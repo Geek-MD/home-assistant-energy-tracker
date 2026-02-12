@@ -4,13 +4,18 @@
 [![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![License](https://img.shields.io/github/license/energy-tracker/home-assistant-energy-tracker.svg)](LICENSE)
 
-Send meter readings from Home Assistant sensors automatically to your [Energy Tracker](https://www.energy-tracker.best-ios-apps.de) account.
+Integrate your [Energy Tracker](https://www.energy-tracker.best-ios-apps.de) account with Home Assistant to automatically sync meter readings and create sensors for all your Energy Tracker devices.
 
 ## Features
 
+- ✅ **Automatic Sensor Creation**: Creates sensors in Home Assistant for all your Energy Tracker devices
+- ✅ **Automatic Synchronization**: Keeps sensor values synchronized with Energy Tracker (updates every 15 minutes)
+- ✅ **Historical Data**: Sensor values are stored in Home Assistant's database for long-term tracking
+- ✅ **Rich Attributes**: Additional device information (last update time, meter type, location) available as sensor attributes
+- ✅ **Smart Device Classes**: Automatically assigns appropriate device class (energy, gas, water) based on meter type
 - ✅ **Config Flow Setup**: Easy configuration through the Home Assistant UI
 - ✅ **Multi-Account Support**: Connect multiple Energy Tracker accounts
-- ✅ **Automated Meter Readings**: Send sensor values automatically via automations
+- ✅ **Send Meter Readings**: Send sensor values to Energy Tracker via automations
 - ✅ **Optional Value Rounding**: Automatic rounding to match your meter's precision
 - ✅ **Full Localization**: 26 languages supported
 - ✅ **Comprehensive Error Handling**: Clear error messages and repair flows
@@ -55,29 +60,65 @@ Then in Home Assistant:
 5. Paste your personal access token
 6. Click **Submit**
 
-### Step 3: Get Your Standard Measuring Device ID
+After configuration, the integration will automatically:
+- Fetch all your devices from Energy Tracker
+- Create a sensor entity for each device in Home Assistant
+- Update sensor values every 15 minutes to stay synchronized with Energy Tracker
+
+You'll find your devices under **Settings** → **Devices & Services** → **Energy Tracker**.
+
+## Usage
+
+### Automatic Sensors
+
+Once configured, the integration automatically creates sensor entities for all devices in your Energy Tracker account. These sensors:
+
+- **Display Current Values**: Show the latest meter reading from Energy Tracker
+- **Have Persistence**: Historical values are stored in Home Assistant's database for long-term tracking
+- **Update Automatically**: Refresh every 15 minutes to stay in sync with Energy Tracker
+- **Include Rich Attributes**: Additional information like last update time, meter type, meter number, and location
+
+#### Sensor Attributes
+
+Each sensor includes the following attributes (when available):
+- `last_updated`: Timestamp of the last update
+- `last_reading_date`: Date of the last meter reading
+- `meter_type`: Type of meter (electricity, gas, water, etc.)
+- `meter_number`: Physical meter number
+- `location`: Device location
+- `device_id`: Energy Tracker device identifier
+
+#### Using Sensors in Dashboards and Automations
+
+The sensors can be used like any other Home Assistant sensor:
+- Add to dashboards for visualization
+- Use in automations and scripts
+- Track in the Energy dashboard
+- Create statistics and analytics
+
+### Sending Meter Readings (Optional)
+
+In addition to automatic synchronization, you can also send meter readings from Home Assistant sensors to Energy Tracker using automations.
+
+#### Step 3: Get Your Standard Measuring Device ID
 
 You need the device ID to send meter readings. There are two ways to get it:
 
-#### Option A: Via Energy Tracker Web Interface
+##### Option A: Via Energy Tracker Web Interface
 
 1. Log into your Energy Tracker account
 2. Go to your device details
 3. Copy the **Standard Measuring Device ID** 
 4. **Important**: Remove the `std-` prefix! The ID should be in UUID format like `deadbeef-dead-beef-dead-beefdeadbeef`
 
-#### Option B: Via API (Recommended)
+##### Option B: Via API (Recommended)
 
 1. Log into your Energy Tracker account
 2. Navigate to **API** → **Documentation**
 3. Use the API endpoint to retrieve your devices
 4. The IDs returned are already in the correct format (without `std-` prefix)
 
-## Usage
-
-This integration provides a service only — no entities are created. Create an automation to send meter readings.
-
-### Step 4: Create an Automation
+#### Step 4: Create an Automation
 
 1. Go to **Settings** → **Automations & Scenes**
 2. Click **+ Create Automation**

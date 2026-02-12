@@ -176,13 +176,17 @@ class EnergyTrackerApi:
         """Fetch all standard measuring devices from Energy Tracker.
 
         Returns:
-            List of device dictionaries containing device information.
+            List of device dictionaries containing basic device information:
+            - id (str): UUID of the device
+            - name (str): Device name
+            - folderPath (str): Logical folder path for grouping
+            - lastUpdatedAt (str): ISO 8601 timestamp of last update
 
         Raises:
             HomeAssistantError: If the API request fails.
         """
         try:
-            # Make direct API request since devices endpoint is not in the client library
+            # Make direct API request to get device list
             endpoint = "/v1/devices/standard"
             response = await self._client._make_request(
                 method="GET",
@@ -231,6 +235,81 @@ class EnergyTrackerApi:
 
         except Exception as err:
             LOGGER.exception("Unexpected error fetching devices")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="unknown_error",
+                translation_placeholders={"error": str(err)},
+            ) from err
+
+    async def get_device_details(self, device_id: str) -> dict[str, Any]:
+        """Fetch detailed information for a specific device.
+
+        Args:
+            device_id: UUID of the device to fetch details for.
+
+        Returns:
+            Dictionary containing detailed device information.
+
+        Raises:
+            HomeAssistantError: If the API request fails.
+        """
+        try:
+            # Make direct API request to get device details
+            endpoint = f"/v1/devices/standard/{device_id}"
+            response = await self._client._make_request(
+                method="GET",
+                endpoint=endpoint,
+            )
+            device_details = await response.json()
+            LOGGER.debug("Fetched details for device %s", device_id)
+            return device_details
+
+        except ResourceNotFoundError as err:
+            LOGGER.warning("Device %s not found: %s", device_id, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="device_not_found",
+            ) from err
+
+        except AuthenticationError as err:
+            LOGGER.error("Authentication failed: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ForbiddenError as err:
+            LOGGER.error("Access forbidden: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except TimeoutError as err:
+            LOGGER.error("Request timeout: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="timeout",
+            ) from err
+
+        except NetworkError as err:
+            LOGGER.error("Network error: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="network_error",
+            ) from err
+
+        except EnergyTrackerAPIError as err:
+            LOGGER.error("API error: %s", err)
+            msg = "; ".join(err.api_message) if err.api_message else str(err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="server_error",
+                translation_placeholders={"error": msg},
+            ) from err
+
+        except Exception as err:
+            LOGGER.exception("Unexpected error fetching device details")
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="unknown_error",

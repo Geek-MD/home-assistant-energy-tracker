@@ -74,14 +74,36 @@ async def _async_update_data(api: EnergyTrackerApi) -> list[dict[str, Any]]:
         api: The Energy Tracker API instance.
 
     Returns:
-        List of device dictionaries.
+        List of device dictionaries with detailed information.
 
     Raises:
         UpdateFailed: If the data update fails.
     """
     try:
+        # First, get the list of all devices
         devices = await api.get_devices()
-        return devices
+
+        # Then, fetch detailed information for each device
+        detailed_devices = []
+        for device in devices:
+            device_id = device.get("id")
+            if device_id:
+                try:
+                    details = await api.get_device_details(device_id)
+                    # Merge basic info with detailed info
+                    details["id"] = device_id
+                    details["name"] = device.get("name", details.get("name", "Unknown"))
+                    details["folderPath"] = device.get("folderPath", "/")
+                    details["lastUpdatedAt"] = device.get("lastUpdatedAt")
+                    detailed_devices.append(details)
+                except Exception as err:
+                    LOGGER.warning(
+                        "Failed to fetch details for device %s: %s", device_id, err
+                    )
+                    # Still add the basic device info even if details fail
+                    detailed_devices.append(device)
+
+        return detailed_devices
     except Exception as err:
         raise UpdateFailed(f"Error fetching device data: {err}") from err
 
@@ -183,6 +205,10 @@ class EnergyTrackerSensor(CoordinatorEntity, SensorEntity):
         for device in self.coordinator.data:
             if device.get("id") == self._device_id:
                 # Add relevant device information as attributes
+                if "lastUpdatedAt" in device:
+                    attributes["last_updated_at"] = device["lastUpdatedAt"]
+                if "folderPath" in device:
+                    attributes["folder_path"] = device["folderPath"]
                 if "lastUpdated" in device:
                     attributes["last_updated"] = device["lastUpdated"]
                 if "lastReadingDate" in device:
