@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 import logging
+from typing import Any
 
 from energy_tracker_api import (
     AuthenticationError,
@@ -165,6 +166,71 @@ class EnergyTrackerApi:
         except Exception as err:
             # Unexpected errors
             LOGGER.exception("Unexpected error")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="unknown_error",
+                translation_placeholders={"error": str(err)},
+            ) from err
+
+    async def get_devices(self) -> list[dict[str, Any]]:
+        """Fetch all standard measuring devices from Energy Tracker.
+
+        Returns:
+            List of device dictionaries containing device information.
+
+        Raises:
+            HomeAssistantError: If the API request fails.
+        """
+        try:
+            # Make direct API request since devices endpoint is not in the client library
+            endpoint = "/v1/devices/standard"
+            response = await self._client._make_request(
+                method="GET",
+                endpoint=endpoint,
+            )
+            devices = await response.json()
+            LOGGER.debug("Fetched %d devices from Energy Tracker", len(devices))
+            return devices
+
+        except AuthenticationError as err:
+            LOGGER.error("Authentication failed: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ForbiddenError as err:
+            LOGGER.error("Access forbidden: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except TimeoutError as err:
+            LOGGER.error("Request timeout: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="timeout",
+            ) from err
+
+        except NetworkError as err:
+            LOGGER.error("Network error: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="network_error",
+            ) from err
+
+        except EnergyTrackerAPIError as err:
+            LOGGER.error("API error: %s", err)
+            msg = "; ".join(err.api_message) if err.api_message else str(err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="server_error",
+                translation_placeholders={"error": msg},
+            ) from err
+
+        except Exception as err:
+            LOGGER.exception("Unexpected error fetching devices")
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="unknown_error",
