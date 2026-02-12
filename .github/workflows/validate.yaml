@@ -1,0 +1,80 @@
+name: Ruff + Mypy + Hassfest
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to check"
+        required: true
+        default: "main"
+      fix:
+        description: "Run ruff with --fix (will apply auto-fixes in the workspace)"
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  lint-type-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the selected branch when invoked via workflow_dispatch
+      - name: Checkout (workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+
+      # Checkout normally for push / pull_request events
+      - name: Checkout (push/pr)
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Ruff Format Check
+        run: |
+          echo "Checking code formatting with ruff"
+          ruff format --check custom_components tests
+
+      - name: Run Ruff
+        run: |
+          echo "Running ruff on branch: ${GITHUB_REF}"
+          # If this is a workflow_dispatch invocation, respect the `fix` input; otherwise run without --fix
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.fix }}" = "true" ]; then
+            echo "Applying ruff --fix (automatic fixes)"
+            # allow non-zero exit from --fix command (it may still leave issues); final check follows
+            ruff check custom_components tests --fix || true
+            echo "Running final ruff check..."
+            ruff check custom_components tests
+          else
+            echo "Running ruff check without --fix"
+            ruff check custom_components tests
+          fi
+
+      - name: Run Mypy
+        run: mypy custom_components
+
+      - name: Check JSON formatting
+        run: |
+          find custom_components/energy_tracker -name "*.json" | while read file; do
+            python3 -c "import json,sys; d=json.load(open('$file')); formatted=json.dumps(d,ensure_ascii=False,indent=2)+'\n'; current=open('$file').read(); sys.exit(0 if formatted==current else 1)" || (echo "❌ $file is not formatted correctly. Run 'make format' locally." && exit 1)
+          done
+
+      - name: Run Hassfest
+        uses: home-assistant/actions/hassfest@master
