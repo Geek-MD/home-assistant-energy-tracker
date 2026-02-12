@@ -178,6 +178,9 @@ async def async_setup_entry(
         )
         LOGGER.debug("Registered service %s/%s", DOMAIN, SERVICE_SEND_METER_READING)
 
+    # Forward entry setup to sensor platform
+    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+
     return True
 
 
@@ -197,6 +200,9 @@ async def async_unload_entry(
     """
     LOGGER.debug("Unloading config entry %s", entry.entry_id)
 
+    # Unload sensor platform
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, ["sensor"])
+
     # Check if there are other loaded entries for this domain
     loaded_entries = [
         e
@@ -213,4 +219,4 @@ async def async_unload_entry(
                 SERVICE_SEND_METER_READING,
             )
 
-    return True
+    return unload_ok
