@@ -17,6 +17,9 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+
 jobs:
   lint-type-validate:
     runs-on: ubuntu-latest
