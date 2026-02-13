@@ -51,7 +51,7 @@ class EnergyTrackerDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Fetch data from API."""
         try:
             LOGGER.debug("Starting data synchronization with Energy Tracker API")
-            
+
             # Fetch all devices
             devices = await self.api.get_devices()
             LOGGER.info("Synchronized %d devices from Energy Tracker API", len(devices))
@@ -60,16 +60,14 @@ class EnergyTrackerDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             device_data: dict[str, dict[str, Any]] = {}
             for device in devices:
                 try:
-                    readings = await self.api.get_meter_readings(
-                        device.id, sort="desc"
-                    )
+                    readings = await self.api.get_meter_readings(device.id, sort="desc")
                     latest_reading = readings[0] if readings else None
-                    
+
                     device_data[device.id] = {
                         "device": device,
                         "latest_reading": latest_reading,
                     }
-                    
+
                     if latest_reading:
                         LOGGER.debug(
                             "Device '%s' (%s): Latest reading %.2f at %s",
@@ -79,8 +77,12 @@ class EnergyTrackerDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                             latest_reading.timestamp,
                         )
                     else:
-                        LOGGER.debug("Device '%s' (%s): No readings available", device.name, device.id)
-                        
+                        LOGGER.debug(
+                            "Device '%s' (%s): No readings available",
+                            device.name,
+                            device.id,
+                        )
+
                 except HomeAssistantError as err:
                     LOGGER.warning(
                         "Failed to fetch readings for device %s: %s", device.id, err
@@ -105,7 +107,9 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Energy Tracker sensors from a config entry."""
-    LOGGER.info("Setting up Energy Tracker sensor platform for entry %s", entry.entry_id)
+    LOGGER.info(
+        "Setting up Energy Tracker sensor platform for entry %s", entry.entry_id
+    )
 
     token = entry.runtime_data
     api = EnergyTrackerApi(hass=hass, token=token)
@@ -125,39 +129,35 @@ async def async_setup_entry(
     entities: list[SensorEntity] = []
     for device_id, data in coordinator.data.items():
         device: DeviceSummary = data["device"]
-        
+
         LOGGER.info(
             "Creating sensors for device '%s' (ID: %s, Folder: %s)",
             device.name,
             device.id,
             device.folder_path,
         )
-        
+
         # Create status sensor
-        entities.append(
-            EnergyTrackerDeviceStatusSensor(coordinator, device_id, entry)
-        )
-        
+        entities.append(EnergyTrackerDeviceStatusSensor(coordinator, device_id, entry))
+
         # Create latest reading sensor
-        entities.append(
-            EnergyTrackerLatestReadingSensor(coordinator, device_id, entry)
-        )
-        
+        entities.append(EnergyTrackerLatestReadingSensor(coordinator, device_id, entry))
+
         # Create last updated sensor
-        entities.append(
-            EnergyTrackerLastUpdatedSensor(coordinator, device_id, entry)
-        )
+        entities.append(EnergyTrackerLastUpdatedSensor(coordinator, device_id, entry))
 
     LOGGER.info(
         "Created %d sensors for %d devices",
         len(entities),
         len(coordinator.data),
     )
-    
+
     async_add_entities(entities)
 
 
-class EnergyTrackerSensorBase(CoordinatorEntity[EnergyTrackerDataUpdateCoordinator], SensorEntity):
+class EnergyTrackerSensorBase(
+    CoordinatorEntity[EnergyTrackerDataUpdateCoordinator], SensorEntity
+):
     """Base class for Energy Tracker sensors."""
 
     _attr_has_entity_name = True
@@ -172,9 +172,9 @@ class EnergyTrackerSensorBase(CoordinatorEntity[EnergyTrackerDataUpdateCoordinat
         super().__init__(coordinator)
         self._device_id = device_id
         self._entry = entry
-        
+
         device: DeviceSummary = coordinator.data[device_id]["device"]
-        
+
         # Device info for grouping
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_id)},
@@ -232,12 +232,12 @@ class EnergyTrackerDeviceStatusSensor(EnergyTrackerSensorBase):
             "folder_path": self.device.folder_path,
             "last_updated_at": self.device.last_updated_at,
         }
-        
+
         if self.latest_reading:
             attrs["meter_id"] = self.latest_reading.meter_id
             if self.latest_reading.meter_number:
                 attrs["meter_number"] = self.latest_reading.meter_number
-                
+
         return attrs
 
 
@@ -280,15 +280,15 @@ class EnergyTrackerLatestReadingSensor(EnergyTrackerSensorBase):
         """Return additional attributes."""
         if not self.latest_reading:
             return None
-            
+
         attrs: dict[str, Any] = {
             "timestamp": self.latest_reading.timestamp,
             "rollover_offset": self.latest_reading.rollover_offset,
         }
-        
+
         if self.latest_reading.note:
             attrs["note"] = self.latest_reading.note
-            
+
         return attrs
 
 

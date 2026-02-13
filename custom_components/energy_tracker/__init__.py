@@ -181,8 +181,10 @@ async def async_setup_entry(
     # Forward setup to sensor platform
     LOGGER.debug("Forwarding setup to sensor platform")
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    
-    LOGGER.info("Energy Tracker integration setup completed for entry %s", entry.entry_id)
+
+    LOGGER.info(
+        "Energy Tracker integration setup completed for entry %s", entry.entry_id
+    )
     return True
 
 
@@ -204,7 +206,7 @@ async def async_unload_entry(
 
     # Unload platforms
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    
+
     if not unload_ok:
         LOGGER.warning("Failed to unload platforms for entry %s", entry.entry_id)
         return False
@@ -225,5 +227,7 @@ async def async_unload_entry(
                 SERVICE_SEND_METER_READING,
             )
 
-    LOGGER.info("Energy Tracker integration unloaded successfully for entry %s", entry.entry_id)
+    LOGGER.info(
+        "Energy Tracker integration unloaded successfully for entry %s", entry.entry_id
+    )
     return True

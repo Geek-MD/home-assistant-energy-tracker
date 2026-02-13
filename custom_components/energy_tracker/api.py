@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import logging
-from typing import Any
 
 from energy_tracker_api import (
     AuthenticationError,
@@ -95,7 +94,7 @@ class EnergyTrackerApi:
             timestamp.isoformat(),
             source_entity_id,
         )
-        
+
         meter_reading = CreateMeterReadingDto(
             value=value,
             timestamp=timestamp,
@@ -247,7 +246,7 @@ class EnergyTrackerApi:
             response = await self._client._make_request(
                 method="GET",
                 endpoint=endpoint,
-                params=params if params else None,
+                params=params or None,
             )
 
             data = await response.json()
@@ -360,7 +359,9 @@ class EnergyTrackerApi:
             ]
 
             LOGGER.debug(
-                "Successfully fetched %d readings for device %s", len(readings), device_id
+                "Successfully fetched %d readings for device %s",
+                len(readings),
+                device_id,
             )
             return readings
 
@@ -396,7 +397,9 @@ class EnergyTrackerApi:
             ) from err
 
         except Exception as err:
-            LOGGER.exception("Unexpected error fetching readings for device %s", device_id)
+            LOGGER.exception(
+                "Unexpected error fetching readings for device %s", device_id
+            )
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="unknown_error",

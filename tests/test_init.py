@@ -63,7 +63,11 @@ class TestAsyncSetupEntry:
         entry.add_to_hass(hass)
 
         # Act
-        result = await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            result = await async_setup_entry(hass, entry)
 
         # Assert
         assert result is True
@@ -89,8 +93,12 @@ class TestAsyncSetupEntry:
         entry2.add_to_hass(hass)
 
         # Act
-        await async_setup_entry(hass, entry1)
-        await async_setup_entry(hass, entry2)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry1)
+            await async_setup_entry(hass, entry2)
 
         # Assert
         assert hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
@@ -111,10 +119,19 @@ class TestAsyncUnloadEntry:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         # Act
-        result = await async_unload_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_unload_platforms",
+            new_callable=AsyncMock,
+            return_value=True,
+        ):
+            result = await async_unload_entry(hass, entry)
 
         # Assert
         assert result is True
@@ -129,11 +146,20 @@ class TestAsyncUnloadEntry:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
         assert hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
 
         # Act
-        await async_unload_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_unload_platforms",
+            new_callable=AsyncMock,
+            return_value=True,
+        ):
+            await async_unload_entry(hass, entry)
 
         # Assert
         assert not hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
@@ -159,11 +185,20 @@ class TestAsyncUnloadEntry:
         )
         entry2.add_to_hass(hass)
 
-        await async_setup_entry(hass, entry1)
-        await async_setup_entry(hass, entry2)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry1)
+            await async_setup_entry(hass, entry2)
 
         # Act
-        await async_unload_entry(hass, entry1)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_unload_platforms",
+            new_callable=AsyncMock,
+            return_value=True,
+        ):
+            await async_unload_entry(hass, entry1)
 
         # Assert
         assert hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING)
@@ -184,7 +219,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         # Set up entity state
         hass.states.async_set(
@@ -230,7 +269,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         call = create_service_call(
             hass,
@@ -264,7 +307,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", STATE_UNAVAILABLE)
 
@@ -302,7 +349,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", STATE_UNKNOWN)
 
@@ -336,7 +387,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", "not_a_number")
 
@@ -374,7 +429,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         # Create state with None timestamp
         mock_state = MagicMock()
@@ -418,7 +477,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         # Simulate runtime_data being empty/missing
         entry.runtime_data = ""
@@ -478,7 +541,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
@@ -515,7 +582,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
@@ -549,7 +620,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="existing-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
@@ -582,7 +657,11 @@ class TestAsyncHandleSendMeterReading:
             entry_id="test-entry-id",
         )
         entry.add_to_hass(hass)
-        await async_setup_entry(hass, entry)
+        with patch(
+            "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+            new_callable=AsyncMock,
+        ):
+            await async_setup_entry(hass, entry)
 
         hass.states.async_set("sensor.energy_meter", "123.45")
 
