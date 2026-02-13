@@ -10,6 +10,8 @@ Send meter readings from Home Assistant sensors automatically to your [Energy Tr
 
 - ✅ **Config Flow Setup**: Easy configuration through the Home Assistant UI
 - ✅ **Multi-Account Support**: Connect multiple Energy Tracker accounts
+- ✅ **Automatic Device Discovery**: Automatically discovers all devices from your Energy Tracker account
+- ✅ **Real-Time Monitoring**: Creates sensors for each device showing current status and latest readings
 - ✅ **Automated Meter Readings**: Send sensor values automatically via automations
 - ✅ **Optional Value Rounding**: Automatic rounding to match your meter's precision
 - ✅ **Full Localization**: 26 languages supported
@@ -75,9 +77,30 @@ You need the device ID to send meter readings. There are two ways to get it:
 
 ## Usage
 
-This integration provides a service only — no entities are created. Create an automation to send meter readings.
+This integration provides two main features:
+1. **Sensor Entities**: Automatic monitoring of all your Energy Tracker devices with real-time data
+2. **Service**: Manual sending of meter readings via automations
+
+### Sensor Entities
+
+After setup, the integration automatically discovers all devices from your Energy Tracker account and creates three sensors for each device:
+
+- **Device Status** (diagnostic): Shows if the device has readings (`active` or `no_readings`)
+- **Latest Reading**: Shows the most recent meter reading value in kWh
+- **Last Updated**: Shows when the device was last updated
+
+Sensors are updated automatically every 15 minutes and can be used in dashboards, automations, and scripts just like any other Home Assistant sensor.
 
 ### Step 4: Create an Automation
+
+#### Option A: Monitor Devices (View Sensors)
+
+1. Go to **Settings** → **Devices & Services** → **Energy Tracker**
+2. Click on your configured account
+3. View your devices and sensors
+4. Add sensors to your dashboard or use them in automations
+
+#### Option B: Send Meter Readings (Service)
 
 1. Go to **Settings** → **Automations & Scenes**
 2. Click **+ Create Automation**
@@ -87,6 +110,41 @@ This integration provides a service only — no entities are created. Create an 
 6. Save the automation
 
 ## Reference
+
+### Sensor Entities
+
+The integration automatically creates three sensors for each device in your Energy Tracker account:
+
+#### Device Status Sensor
+
+| Property | Value |
+|----------|-------|
+| **Entity ID** | `sensor.<device_name>_device_status` |
+| **Type** | Diagnostic |
+| **States** | `active`, `no_readings` |
+| **Attributes** | `device_id`, `folder_path`, `last_updated_at`, `meter_id`, `meter_number` |
+| **Update Interval** | 15 minutes |
+
+#### Latest Reading Sensor
+
+| Property | Value |
+|----------|-------|
+| **Entity ID** | `sensor.<device_name>_latest_reading` |
+| **Type** | Energy |
+| **Device Class** | `energy` |
+| **State Class** | `total_increasing` |
+| **Unit** | kWh |
+| **Attributes** | `timestamp`, `rollover_offset`, `note` |
+| **Update Interval** | 15 minutes |
+
+#### Last Updated Sensor
+
+| Property | Value |
+|----------|-------|
+| **Entity ID** | `sensor.<device_name>_last_updated` |
+| **Type** | Diagnostic |
+| **Device Class** | `timestamp` |
+| **Update Interval** | 15 minutes |
 
 ### Action `energy_tracker.send_meter_reading`
 
@@ -98,6 +156,8 @@ This integration provides a service only — no entities are created. Create an 
 | `allow_rounding` | No | boolean | Round value to meter precision (default: `true`) |
 
 ### Example Automation (YAML)
+
+#### Sending Meter Readings
 
 ```yaml
 - alias: "Send daily electricity reading"
@@ -111,6 +171,33 @@ This integration provides a service only — no entities are created. Create an 
         device_id: "deadbeef-dead-beef-dead-beefdeadbeef"
         source_entity_id: <select from dropdown>
         allow_rounding: true
+```
+
+#### Using Energy Tracker Sensors
+
+```yaml
+- alias: "Alert on high energy consumption"
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.my_electricity_meter_latest_reading
+      above: 5000
+  actions:
+    - action: notify.mobile_app
+      data:
+        message: "Energy consumption exceeded 5000 kWh!"
+
+- alias: "Check device status"
+  triggers:
+    - trigger: state
+      entity_id: sensor.my_electricity_meter_device_status
+      to: "no_readings"
+      for:
+        hours: 24
+  actions:
+    - action: persistent_notification.create
+      data:
+        title: "Energy Tracker Device Issue"
+        message: "No readings received for 24 hours"
 ```
 
 ### Supported Entity Types
@@ -148,6 +235,12 @@ Then check **Settings** → **System** → **Logs** for detailed information.
 
 ### Common Issues
 
+**Q: I don't see any sensors after setup**  
+A: Make sure you have at least one device in your Energy Tracker account. Sensors are created automatically for each device. Check **Settings** → **Devices & Services** → **Energy Tracker** to see your devices.
+
+**Q: Sensor shows "unavailable" or "unknown"**  
+A: This usually means the Energy Tracker API is temporarily unavailable or your device has no readings yet. Wait 15 minutes for the next automatic update, or restart Home Assistant to force an update.
+
 **Q: "Standard measuring device not found" error**  
 A: Verify the device ID is correct. It should be a UUID format like `deadbeef-dead-beef-dead-beefdeadbeef`. Find it in your Energy Tracker account under device details.
 
@@ -164,6 +257,9 @@ A: Your token may be invalid. Go to **Settings** → **Devices & Services** → 
 
 **Q: How do I update my token?**  
 A: Click the **⋮** menu on your Energy Tracker integration and select **Reconfigure**. Leave the token field empty to keep the existing token, or enter a new one.
+
+**Q: How often do sensors update?**  
+A: Sensors automatically update every 15 minutes. You can restart Home Assistant to force an immediate update.
 
 ## Support
 
