@@ -161,7 +161,7 @@ async def async_setup_entry(
     Returns:
         True if setup was successful, False otherwise.
     """
-    LOGGER.debug("Setting up config entry %s", entry.entry_id)
+    LOGGER.info("Setting up Energy Tracker integration for entry %s", entry.entry_id)
 
     entry.runtime_data = entry.data[CONF_API_TOKEN]
 
@@ -176,8 +176,13 @@ async def async_setup_entry(
             _handle_send_meter_reading,
             schema=SERVICE_SEND_METER_READING_SCHEMA,
         )
-        LOGGER.debug("Registered service %s/%s", DOMAIN, SERVICE_SEND_METER_READING)
+        LOGGER.info("Registered service %s.%s", DOMAIN, SERVICE_SEND_METER_READING)
 
+    # Forward setup to sensor platform
+    LOGGER.debug("Forwarding setup to sensor platform")
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    
+    LOGGER.info("Energy Tracker integration setup completed for entry %s", entry.entry_id)
     return True
 
 
@@ -195,7 +200,14 @@ async def async_unload_entry(
     Returns:
         True if the unload was successful.
     """
-    LOGGER.debug("Unloading config entry %s", entry.entry_id)
+    LOGGER.info("Unloading Energy Tracker integration for entry %s", entry.entry_id)
+
+    # Unload platforms
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    
+    if not unload_ok:
+        LOGGER.warning("Failed to unload platforms for entry %s", entry.entry_id)
+        return False
 
     # Check if there are other loaded entries for this domain
     loaded_entries = [
@@ -207,10 +219,11 @@ async def async_unload_entry(
     if not loaded_entries:
         if hass.services.has_service(DOMAIN, SERVICE_SEND_METER_READING):
             hass.services.async_remove(DOMAIN, SERVICE_SEND_METER_READING)
-            LOGGER.debug(
+            LOGGER.info(
                 "Removed service %s.%s after last config entry was unloaded",
                 DOMAIN,
                 SERVICE_SEND_METER_READING,
             )
 
+    LOGGER.info("Energy Tracker integration unloaded successfully for entry %s", entry.entry_id)
     return True
