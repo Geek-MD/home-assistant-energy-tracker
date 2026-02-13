@@ -13,7 +13,7 @@ from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 
 from .api import EnergyTrackerApi
-from .const import CONF_API_TOKEN, DOMAIN, SERVICE_SEND_METER_READING
+from .const import CONF_API_TOKEN, DOMAIN, PLATFORMS, SERVICE_SEND_METER_READING
 
 type EnergyTrackerConfigEntry = ConfigEntry[str]
 
