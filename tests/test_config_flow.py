@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
@@ -23,13 +23,17 @@ async def test_user_form_create_entry(hass: HomeAssistant) -> None:
     assert result["step_id"] == "user"
 
     # Act
-    result2 = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {
-            CONF_NAME: "John's Account",
-            CONF_API_TOKEN: "test-token-123",
-        },
-    )
+    with patch(
+        "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+        new_callable=AsyncMock,
+    ):
+        result2 = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            {
+                CONF_NAME: "John's Account",
+                CONF_API_TOKEN: "test-token-123",
+            },
+        )
 
     # Assert
     assert result2["type"] == FlowResultType.CREATE_ENTRY

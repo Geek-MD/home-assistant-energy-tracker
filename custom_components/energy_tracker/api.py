@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 import logging
 
@@ -24,6 +25,28 @@ from homeassistant.exceptions import HomeAssistantError
 from .const import DOMAIN
 
 LOGGER = logging.getLogger(__name__)
+
+
+@dataclass
+class DeviceSummary:
+    """Represents a summary of a measuring device."""
+
+    id: str
+    name: str
+    folder_path: str
+    last_updated_at: str
+
+
+@dataclass
+class MeterReading:
+    """Represents a meter reading."""
+
+    timestamp: str
+    value: str
+    rollover_offset: int
+    note: str | None
+    meter_id: str
+    meter_number: str | None
 
 
 class EnergyTrackerApi:
@@ -64,6 +87,14 @@ class EnergyTrackerApi:
         Raises:
             HomeAssistantError: If the API request fails.
         """
+        LOGGER.debug(
+            "Sending meter reading to API: device=%s, value=%.2f, timestamp=%s, source=%s",
+            device_id,
+            value,
+            timestamp.isoformat(),
+            source_entity_id,
+        )
+
         meter_reading = CreateMeterReadingDto(
             value=value,
             timestamp=timestamp,
@@ -75,7 +106,11 @@ class EnergyTrackerApi:
                 meter_reading=meter_reading,
                 allow_rounding=allow_rounding,
             )
-            LOGGER.info("Reading sent: %g", value)
+            LOGGER.info(
+                "Successfully sent meter reading: device=%s, value=%.2f",
+                device_id,
+                value,
+            )
 
         except ValidationError as err:
             # HTTP 400 - Bad Request
@@ -165,6 +200,206 @@ class EnergyTrackerApi:
         except Exception as err:
             # Unexpected errors
             LOGGER.exception("Unexpected error")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="unknown_error",
+                translation_placeholders={"error": str(err)},
+            ) from err
+
+    async def get_devices(
+        self,
+        *,
+        name: str | None = None,
+        folder_path: str | None = None,
+        updated_after: str | None = None,
+        updated_before: str | None = None,
+    ) -> list[DeviceSummary]:
+        """Get list of standard measuring devices.
+
+        Args:
+            name: Filter by device name (partial match).
+            folder_path: Filter devices in or under specified folder path.
+            updated_after: Include only devices updated on or after this timestamp (ISO 8601).
+            updated_before: Include only devices updated on or before this timestamp (ISO 8601).
+
+        Returns:
+            List of DeviceSummary objects.
+
+        Raises:
+            HomeAssistantError: If the API request fails.
+        """
+        LOGGER.info("Fetching devices from Energy Tracker API")
+
+        endpoint = "/v1/devices/standard"
+        params: dict[str, str] = {}
+
+        if name:
+            params["name"] = name
+        if folder_path:
+            params["folderPath"] = folder_path
+        if updated_after:
+            params["updatedAfter"] = updated_after
+        if updated_before:
+            params["updatedBefore"] = updated_before
+
+        try:
+            response = await self._client._make_request(
+                method="GET",
+                endpoint=endpoint,
+                params=params or None,
+            )
+
+            data = await response.json()
+            devices = [
+                DeviceSummary(
+                    id=device["id"],
+                    name=device["name"],
+                    folder_path=device["folderPath"],
+                    last_updated_at=device["lastUpdatedAt"],
+                )
+                for device in data
+            ]
+
+            LOGGER.info("Successfully fetched %d devices from API", len(devices))
+            return devices
+
+        except (AuthenticationError, ForbiddenError) as err:
+            LOGGER.error("Authentication error fetching devices: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ValidationError as err:
+            LOGGER.warning("Validation error fetching devices: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="bad_request",
+                translation_placeholders={
+                    "error": "; ".join(err.api_message) if err.api_message else str(err)
+                },
+            ) from err
+
+        except RateLimitError as err:
+            LOGGER.warning("Rate limit exceeded fetching devices: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="rate_limit_no_time",
+            ) from err
+
+        except (NetworkError, TimeoutError) as err:
+            LOGGER.error("Network error fetching devices: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="network_error",
+            ) from err
+
+        except Exception as err:
+            LOGGER.exception("Unexpected error fetching devices")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="unknown_error",
+                translation_placeholders={"error": str(err)},
+            ) from err
+
+    async def get_meter_readings(
+        self,
+        device_id: str,
+        *,
+        meter_id: str | None = None,
+        from_timestamp: str | None = None,
+        to_timestamp: str | None = None,
+        sort: str = "desc",
+    ) -> list[MeterReading]:
+        """Get meter readings for a standard measuring device.
+
+        Args:
+            device_id: The unique ID of the measuring device.
+            meter_id: Filter by meter ID.
+            from_timestamp: Include only readings on or after this timestamp (ISO 8601).
+            to_timestamp: Include only readings on or before this timestamp (ISO 8601).
+            sort: Sort direction ('asc' or 'desc', default 'desc').
+
+        Returns:
+            List of MeterReading objects.
+
+        Raises:
+            HomeAssistantError: If the API request fails.
+        """
+        LOGGER.debug("Fetching meter readings for device %s", device_id)
+
+        endpoint = f"/v3/devices/standard/{device_id}/meter-readings"
+        params: dict[str, str] = {"sort": sort}
+
+        if meter_id:
+            params["meterId"] = meter_id
+        if from_timestamp:
+            params["from"] = from_timestamp
+        if to_timestamp:
+            params["to"] = to_timestamp
+
+        try:
+            response = await self._client._make_request(
+                method="GET",
+                endpoint=endpoint,
+                params=params,
+            )
+
+            data = await response.json()
+            readings = [
+                MeterReading(
+                    timestamp=reading["timestamp"],
+                    value=reading["value"],
+                    rollover_offset=reading["rolloverOffset"],
+                    note=reading.get("note"),
+                    meter_id=reading["meterId"],
+                    meter_number=reading.get("meterNumber"),
+                )
+                for reading in data
+            ]
+
+            LOGGER.debug(
+                "Successfully fetched %d readings for device %s",
+                len(readings),
+                device_id,
+            )
+            return readings
+
+        except ResourceNotFoundError as err:
+            LOGGER.warning("Device %s not found: %s", device_id, err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="device_not_found",
+            ) from err
+
+        except (AuthenticationError, ForbiddenError) as err:
+            LOGGER.error("Authentication error fetching readings: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="auth_failed",
+            ) from err
+
+        except ValidationError as err:
+            LOGGER.warning("Validation error fetching readings: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="bad_request",
+                translation_placeholders={
+                    "error": "; ".join(err.api_message) if err.api_message else str(err)
+                },
+            ) from err
+
+        except (NetworkError, TimeoutError) as err:
+            LOGGER.error("Network error fetching readings: %s", err)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="network_error",
+            ) from err
+
+        except Exception as err:
+            LOGGER.exception(
+                "Unexpected error fetching readings for device %s", device_id
+            )
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="unknown_error",

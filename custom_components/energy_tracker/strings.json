@@ -29,6 +29,23 @@
       "reconfigure_successful": "Configuration updated successfully."
     }
   },
+  "entity": {
+    "sensor": {
+      "device_status": {
+        "name": "Status",
+        "state": {
+          "active": "Active",
+          "no_readings": "No readings"
+        }
+      },
+      "latest_reading": {
+        "name": "Latest reading"
+      },
+      "last_updated": {
+        "name": "Last updated"
+      }
+    }
+  },
   "exceptions": {
     "timeout": {
       "message": "Request timed out. Please check network connection and try again."
