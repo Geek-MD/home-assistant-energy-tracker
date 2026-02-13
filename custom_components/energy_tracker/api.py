@@ -87,7 +87,7 @@ class EnergyTrackerApi:
         Raises:
             HomeAssistantError: If the API request fails.
         """
-        LOGGER.info(
+        LOGGER.debug(
             "Sending meter reading to API: device=%s, value=%.2f, timestamp=%s, source=%s",
             device_id,
             value,

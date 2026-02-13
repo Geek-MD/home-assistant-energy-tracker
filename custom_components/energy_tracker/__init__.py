@@ -176,7 +176,7 @@ async def async_setup_entry(
             _handle_send_meter_reading,
             schema=SERVICE_SEND_METER_READING_SCHEMA,
         )
-        LOGGER.info("Registered service %s.%s", DOMAIN, SERVICE_SEND_METER_READING)
+        LOGGER.info("Registered service %s/%s", DOMAIN, SERVICE_SEND_METER_READING)
 
     # Forward setup to sensor platform
     LOGGER.debug("Forwarding setup to sensor platform")
